@@ -1,7 +1,7 @@
 version: '3'
 services:
-  web_t4_tri2:
-    image: java_springv1_t4_tri2
+  web_t4_tri2_f1:
+    image: java_springv1_t4_tri2_f1
     build: .
     ports:
       - "8102:8085"
