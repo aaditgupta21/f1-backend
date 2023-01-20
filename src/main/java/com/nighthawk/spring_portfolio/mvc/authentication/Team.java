@@ -1,17 +1,14 @@
 package com.nighthawk.spring_portfolio.mvc.authentication;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.time.ZoneId;
-import java.util.Date;
+import java.util.ArrayList;
 
-import javax.persistence.Column;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
 import org.hibernate.annotations.TypeDef;
@@ -52,10 +49,12 @@ public class Team {
     @Size(min = 2, max = 30, message = "Name (2 to 30 chars)")
     private String location;
 
-
     public String toString() {
         return ("{ \"name\": " + this.name + ", " + "\"location\": " + this.location + " }");
     }
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    private ArrayList<User> users = new ArrayList<>();
 
     public static void main(String[] args) {
         Team newTeam = new Team();

@@ -3,17 +3,22 @@ package com.nighthawk.spring_portfolio.mvc.authentication;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.*;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
