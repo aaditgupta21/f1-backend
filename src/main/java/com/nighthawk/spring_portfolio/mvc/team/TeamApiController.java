@@ -25,13 +25,23 @@ public class TeamApiController {
     @Autowired
     private TeamJpaRepository repository;
 
-    @PostMapping(value = "/postUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> postUser(@RequestParam("email") String email,
+    // TODO: needs security access since we only want admins to create a new team
+    @PostMapping(value = "/newTeam", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> newTeam(@RequestParam("name") String name,
+            @RequestParam("location") String location) {
+
+        Team team = new Team(name, location);
+        repository.save(team);
+        return new ResponseEntity<>(name + " team has been successfully created", HttpStatus.CREATED);
+    }
+
+    @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> newUser(@RequestParam("email") String email,
             @RequestParam("password") String password,
             @RequestParam("name") String name,
             @RequestParam("dob") String dobString,
             @RequestParam("gender") char gender,
-            @RequestParam("id") long id) {
+            @RequestParam("teamID") long teamID) {
 
         // Create DOB
         Date dob;
@@ -44,7 +54,7 @@ public class TeamApiController {
         }
 
         // find team by ID
-        Optional<Team> optional = repository.findById(id);
+        Optional<Team> optional = repository.findById(teamID);
         if (optional.isPresent()) { // Good ID
             Team team = optional.get(); // value from findByID
             User user = new User(email, password, gender, name, dob);
