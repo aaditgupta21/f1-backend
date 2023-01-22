@@ -43,9 +43,11 @@ The last annotation connect to database
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class User {
 
-    // automatic unique identifier for Person record
+    // automatic unique identifier for user record
+    // GenerationType.IDENTITY used to prevent db locking (could use join column in
+    // Team.java i think but oh well)
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // email, password, roles are key attributes to login and authentication
