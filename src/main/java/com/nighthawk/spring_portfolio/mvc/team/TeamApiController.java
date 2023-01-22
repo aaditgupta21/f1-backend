@@ -96,15 +96,15 @@ public class TeamApiController {
     }
 
     @PostMapping("/updateRole")
-    public ResponseEntity<Object> updateRole(@RequestParam("id") Long id,
+    public ResponseEntity<Object> updateRole(@RequestParam("email") String email,
             @RequestParam("roleName") String roleName) {
-        Optional<User> optional = userRepository.findById(id);
-        if (optional.isPresent()) {
-            User user = optional.get();
+        User user = userRepository.findByEmail(email);
+        if (user != null) {
             Role role = roleRepository.findByName(roleName);
             user.getRoles().add(role);
             userRepository.save(user);
+            return new ResponseEntity<>(email + " role updated", HttpStatus.OK);
         }
-        return new ResponseEntity<>(id + " role updated", HttpStatus.OK);
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 }
