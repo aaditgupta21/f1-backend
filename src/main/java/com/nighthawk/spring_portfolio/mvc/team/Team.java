@@ -12,6 +12,8 @@ import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
+import java.util.List;
+
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.security.core.userdetails.memory.UserAttribute;
@@ -54,8 +56,7 @@ public class Team {
 
     // one team has many users (relationship)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    @JoinColumn(name = "team_id", referencedColumnName = "user_id")
-    private ArrayList<User> users = new ArrayList<User>();
+    private List<User> users = new ArrayList<>();
 
     public Team(String name, String location) {
         this.name = name;
