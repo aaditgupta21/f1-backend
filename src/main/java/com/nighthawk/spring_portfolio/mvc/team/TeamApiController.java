@@ -6,16 +6,10 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 
 import java.util.*;
-
-import javax.transaction.Transactional;
 
 import java.text.SimpleDateFormat;
 
@@ -29,10 +23,12 @@ public class TeamApiController {
     @Autowired
     private UserJpaRepository userRepository;
 
+    Map<String, Integer> teamToUser = new HashMap<String, Integer>();
+
     /*
      * GET List of Teams
      */
-    @GetMapping("/t")
+    @GetMapping("/teamsList")
     public ResponseEntity<List<Team>> getTeams() {
         return new ResponseEntity<>(teamRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
@@ -40,7 +36,7 @@ public class TeamApiController {
     /*
      * GET List of users
      */
-    @GetMapping("/u")
+    @GetMapping("/usersList")
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
