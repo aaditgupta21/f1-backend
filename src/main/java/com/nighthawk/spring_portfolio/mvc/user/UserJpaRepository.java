@@ -3,7 +3,6 @@ package com.nighthawk.spring_portfolio.mvc.user;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -15,6 +14,7 @@ Extends the JpaRepository interface from Spring Data JPA.
 
 public interface UserJpaRepository extends JpaRepository<User, Long> {
     User findByName(String name);
+    User findByEmail(String email);
 
     List<User> findAllByOrderByNameAsc();
 

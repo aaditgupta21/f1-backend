@@ -3,25 +3,27 @@ package com.nighthawk.spring_portfolio.mvc.user;
 import java.time.LocalDate;
 import java.time.Period;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
+import java.util.ArrayList;
+import java.util.Collection;
 
+// import javax.management.relation.Role;
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.*;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
+import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import lombok.AllArgsConstructor;
@@ -71,6 +73,9 @@ public class User {
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date dob;
 
+    @ManyToMany(fetch = FetchType.EAGER)
+    private Collection<Role> roles = new ArrayList<>();
+
     // A custom getter to return age from dob attribute
     public int getAge() {
         if (this.dob != null) {
@@ -89,12 +94,13 @@ public class User {
         return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
     }
 
-    public User(String email, String password, char gender, String name, Date dob) {
+    public User(String email, String password, char gender, String name, Date dob, Role role) {
         this.email = email;
         this.password = password;
         this.gender = gender;
         this.name = name;
         this.dob = dob;
+        this.roles.add(role);
     }
 
     public static void main(String[] args) {

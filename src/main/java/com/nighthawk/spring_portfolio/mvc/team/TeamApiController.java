@@ -6,16 +6,12 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.role.Role;
+import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 
 import java.util.*;
-
-import javax.transaction.Transactional;
 
 import java.text.SimpleDateFormat;
 
@@ -29,10 +25,15 @@ public class TeamApiController {
     @Autowired
     private UserJpaRepository userRepository;
 
+    @Autowired
+    private RoleJpaRepository roleRepository;
+
+    Map<String, Integer> teamToUser = new HashMap<String, Integer>();
+
     /*
      * GET List of Teams
      */
-    @GetMapping("/t")
+    @GetMapping("/teamsList")
     public ResponseEntity<List<Team>> getTeams() {
         return new ResponseEntity<>(teamRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
@@ -40,7 +41,7 @@ public class TeamApiController {
     /*
      * GET List of users
      */
-    @GetMapping("/u")
+    @GetMapping("/usersList")
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
@@ -79,7 +80,8 @@ public class TeamApiController {
         // find team by name
         Team team = teamRepository.findByName(teamName);
         if (team != null) {
-            User user = new User(email, password, gender, name, dob);
+            Role roleStudent = roleRepository.findByName("User");
+            User user = new User(email, password, gender, name, dob, roleStudent);
 
             team.getUsers().add(user);
             teamRepository.save(team); // conclude by writing the user updates
@@ -91,5 +93,18 @@ public class TeamApiController {
             return new ResponseEntity<>("team name is invalid", HttpStatus.BAD_REQUEST);
         }
 
+    }
+
+    @PostMapping("/updateRole")
+    public ResponseEntity<Object> updateRole(@RequestParam("id") Long id,
+            @RequestParam("roleName") String roleName) {
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isPresent()) {
+            User user = optional.get();
+            Role role = roleRepository.findByName(roleName);
+            user.getRoles().add(role);
+            userRepository.save(user);
+        }
+        return new ResponseEntity<>(id + " role updated", HttpStatus.OK);
     }
 }
