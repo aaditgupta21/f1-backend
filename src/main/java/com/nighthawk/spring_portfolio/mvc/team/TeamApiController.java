@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.role.Role;
+import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 
 import java.util.*;
 
@@ -22,6 +24,9 @@ public class TeamApiController {
 
     @Autowired
     private UserJpaRepository userRepository;
+
+    @Autowired
+    private RoleJpaRepository roleRepository;
 
     Map<String, Integer> teamToUser = new HashMap<String, Integer>();
 
@@ -75,7 +80,9 @@ public class TeamApiController {
         Optional<Team> optional = teamRepository.findById(teamID);
         if (optional.isPresent()) { // Good ID
             Team team = optional.get(); // value from findByID
-            User user = new User(email, password, gender, name, dob);
+            Role roleStudent = roleRepository.findByName("Student");
+
+            User user = new User(email, password, gender, name, dob, roleStudent);
 
             team.getUsers().add(user);
             teamRepository.save(team); // conclude by writing the user updates

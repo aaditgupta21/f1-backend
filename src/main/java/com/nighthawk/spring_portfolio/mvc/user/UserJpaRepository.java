@@ -14,6 +14,7 @@ Extends the JpaRepository interface from Spring Data JPA.
 
 public interface UserJpaRepository extends JpaRepository<User, Long> {
     User findByName(String name);
+    User findByEmail(String email);
 
     List<User> findAllByOrderByNameAsc();
 
