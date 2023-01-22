@@ -80,7 +80,7 @@ public class TeamApiController {
         Optional<Team> optional = teamRepository.findById(teamID);
         if (optional.isPresent()) { // Good ID
             Team team = optional.get(); // value from findByID
-            Role roleStudent = roleRepository.findByName("Student");
+            Role roleStudent = roleRepository.findByName("User");
 
             User user = new User(email, password, gender, name, dob, roleStudent);
 
@@ -93,5 +93,18 @@ public class TeamApiController {
 
         // return Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/updateRole")
+    public ResponseEntity<Object> updateRole(@RequestParam("id") Long id,
+            @RequestParam("roleName") String roleName) {
+        Optional<User> optional = userRepository.findById(id);
+        if (optional.isPresent()) {
+            User user = optional.get();
+            Role role = roleRepository.findByName(roleName);
+            user.getRoles().add(role);
+            userRepository.save(user);
+        }
+        return new ResponseEntity<>(id + " role updated", HttpStatus.OK);
     }
 }

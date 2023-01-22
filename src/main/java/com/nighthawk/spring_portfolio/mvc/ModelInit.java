@@ -14,22 +14,24 @@ import java.util.List;
 
 @Component // Scans Application for ModelInit Bean, this detects CommandLineRunner
 public class ModelInit {
-    @Autowired JokesJpaRepository repository;
-    @Autowired RoleJpaRepository roleJpaRepository;
+    @Autowired
+    JokesJpaRepository repository;
+    @Autowired
+    RoleJpaRepository roleJpaRepository;
 
     @Bean
-    CommandLineRunner run() {  // The run() method will be executed after the application starts
+    CommandLineRunner run() { // The run() method will be executed after the application starts
         return args -> {
 
             // Joke database is populated with starting jokes
             String[] jokesArray = Jokes.init();
             for (String joke : jokesArray) {
-                List<Jokes> test = repository.findByJokeIgnoreCase(joke);  // JPA lookup
+                List<Jokes> test = repository.findByJokeIgnoreCase(joke); // JPA lookup
                 if (test.size() == 0)
-                    repository.save(new Jokes(null, joke, 0, 0)); //JPA save
+                    repository.save(new Jokes(null, joke, 0, 0)); // JPA save
             }
 
-            String[] roles = {"Student", "Admin"};
+            String[] roles = { "User", "Admin", "Coach", "Pit", "Driver" };
             for (String role : roles) {
                 if (roleJpaRepository.findByName(role) == null)
                     roleJpaRepository.save(new Role(null, role));
@@ -38,4 +40,3 @@ public class ModelInit {
         };
     }
 }
-
