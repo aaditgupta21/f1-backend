@@ -73,5 +73,4 @@ public class Team {
         newTeam.setLocation("United Kingdom");
         System.out.println(newTeam.toString());
     }
-
 }
