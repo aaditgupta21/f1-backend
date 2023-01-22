@@ -62,8 +62,9 @@ public class TeamApiController {
             @RequestParam("name") String name,
             @RequestParam("dob") String dobString,
             @RequestParam("gender") char gender,
-            @RequestParam("teamID") long teamID) { // preferably we use team name instead (TODO: make a map for id &
-                                                   // name?)
+            @RequestParam("teamName") String teamName) { // preferably we use team name instead (TODO: make a map for id
+                                                         // &
+        // name?)
 
         // Create DOB
         Date dob;
@@ -75,20 +76,20 @@ public class TeamApiController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        // find team by ID
-        Optional<Team> optional = teamRepository.findById(teamID);
-        if (optional.isPresent()) { // Good ID
-            Team team = optional.get(); // value from findByID
+        // find team by name
+        Team team = teamRepository.findByName(teamName);
+        if (team != null) {
             User user = new User(email, password, gender, name, dob);
 
             team.getUsers().add(user);
             teamRepository.save(team); // conclude by writing the user updates
 
-            // return user (or return w message of successfully created user)
+            // return email (or return w message of successfully created user)
             return new ResponseEntity<>(email + " user created successfully", HttpStatus.OK);
+        } else {
+            // returns team name could not be found and bad request
+            return new ResponseEntity<>("team name is invalid", HttpStatus.BAD_REQUEST);
         }
 
-        // return Bad ID
-        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }
