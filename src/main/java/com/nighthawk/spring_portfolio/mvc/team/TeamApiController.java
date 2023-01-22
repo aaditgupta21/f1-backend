@@ -63,9 +63,7 @@ public class TeamApiController {
             @RequestParam("name") String name,
             @RequestParam("dob") String dobString,
             @RequestParam("gender") char gender,
-            @RequestParam("teamName") String teamName) { // preferably we use team name instead (TODO: make a map for id
-                                                         // &
-        // name?)
+            @RequestParam("teamName") String teamName) {
 
         // Create DOB
         Date dob;
@@ -79,6 +77,8 @@ public class TeamApiController {
 
         // find team by name
         Team team = teamRepository.findByName(teamName);
+
+        // if team is not null then it adds user to db, if not it sends bad request
         if (team != null) {
             Role roleStudent = roleRepository.findByName("User");
             User user = new User(email, password, gender, name, dob, roleStudent);
