@@ -1,4 +1,4 @@
-package com.nighthawk.spring_portfolio.mvc.authentication;
+package com.nighthawk.spring_portfolio.mvc.user;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -85,6 +85,14 @@ public class User {
 
     public String getAgeToString() {
         return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
+    }
+
+    public User(String email, String password, char gender, String name, Date dob) {
+        this.email = email;
+        this.password = password;
+        this.gender = gender;
+        this.name = name;
+        this.dob = dob;
     }
 
     public static void main(String[] args) {

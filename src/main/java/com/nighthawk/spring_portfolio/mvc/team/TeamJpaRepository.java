@@ -1,8 +1,9 @@
-package com.nighthawk.spring_portfolio.mvc.authentication;
+package com.nighthawk.spring_portfolio.mvc.team;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /*
@@ -11,16 +12,15 @@ Extends the JpaRepository interface from Spring Data JPA.
 -- JpaRepository defines standard CRUD methods
 -- Via JPA the developer can retrieve database from relational databases to Java objects and vice versa.
  */
-public interface AuthenticationJpaRepository extends JpaRepository<Team, Long> {
+
+public interface TeamJpaRepository extends JpaRepository<Team, Long> {
     Team findByName(String name);
 
     List<Team> findAllByOrderByNameAsc();
 
     // Custom JPA query
-    @Query(
-            value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1",
-            nativeQuery = true)
+    @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
     List<Team> findByLikeTermNative(String term);
 
-    Team mercedes = new Team(null,"Mercedes", "London", null);
+    // Team mercedes = new Team("Mercedes", "London");
 }

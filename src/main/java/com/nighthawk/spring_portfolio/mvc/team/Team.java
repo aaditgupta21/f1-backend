@@ -1,4 +1,4 @@
-package com.nighthawk.spring_portfolio.mvc.authentication;
+package com.nighthawk.spring_portfolio.mvc.team;
 
 import java.util.ArrayList;
 
@@ -8,12 +8,15 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.core.userdetails.memory.UserAttribute;
 
+import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 
 import lombok.AllArgsConstructor;
@@ -49,12 +52,19 @@ public class Team {
     @Size(min = 2, max = 30, message = "Name (2 to 30 chars)")
     private String location;
 
+    // one team has many users (relationship)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+    @JoinColumn(name = "team_id", referencedColumnName = "user_id")
+    private ArrayList<User> users = new ArrayList<User>();
+
+    public Team(String name, String location) {
+        this.name = name;
+        this.location = location;
+    }
+
     public String toString() {
         return ("{ \"name\": " + this.name + ", " + "\"location\": " + this.location + " }");
     }
-
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private ArrayList<User> users = new ArrayList<>();
 
     public static void main(String[] args) {
         Team newTeam = new Team();
