@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
@@ -81,6 +81,7 @@ public class TeamApiController {
         // if team is not null then it adds user to db, if not it sends bad request
         if (team != null) {
             Role roleStudent = roleRepository.findByName("User");
+            password = BCrypt.hashpw(password, BCrypt.gensalt());
             User user = new User(email, password, gender, name, dob, roleStudent);
 
             team.getUsers().add(user);
