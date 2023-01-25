@@ -7,8 +7,6 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.Positive;
 import java.util.Date;
 
-// import javax.management.relation.Role;
-import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
