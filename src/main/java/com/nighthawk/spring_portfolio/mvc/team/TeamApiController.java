@@ -10,8 +10,11 @@ import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 
 import java.util.*;
+
+import javax.transaction.Transactional;
 
 import java.text.SimpleDateFormat;
 
@@ -108,4 +111,34 @@ public class TeamApiController {
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping(value = "/setDriverLog", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> driverLog(@RequestParam("teamName") String teamName,
+            @RequestParam("date") String dateString,
+            @RequestParam("miles") double miles,
+            @RequestParam("time") double time) {
+
+        // find the person by ID
+        Team team = teamRepository.findByName(teamName);
+        if (team != null) { // Good ID
+            Date date;
+            try {
+                date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+            } catch (Exception e) {
+                return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
+            }
+
+            DriveLog driverLog = new DriveLog(date, miles, time);
+            team.getDrivelogs().add(driverLog);
+
+            teamRepository.save(team); // conclude by writing the stats updates
+
+            // return Person with update Stats
+            return new ResponseEntity<>(team, HttpStatus.OK);
+        }
+        // return Bad ID
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+    }
+
 }

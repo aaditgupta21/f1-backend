@@ -8,11 +8,12 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-
+import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 
 import lombok.AllArgsConstructor;
@@ -51,6 +52,10 @@ public class Team {
     // one team has many users (relationship)
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users = new ArrayList<>();
+
+    @JoinColumn(name = "drivelog_id")
+    @OneToMany
+    private List<DriveLog> drivelogs = new ArrayList<>();
 
     public Team(String name, String location) {
         this.name = name;
