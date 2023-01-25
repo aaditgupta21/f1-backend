@@ -14,8 +14,7 @@ import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 
 import java.util.*;
 
-import javax.transaction.Transactional;
-
+import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 
 @RestController
@@ -112,6 +111,7 @@ public class TeamApiController {
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     @PostMapping(value = "/setDriverLog", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> driverLog(@RequestParam("teamName") String teamName,
             @RequestParam("date") String dateString,

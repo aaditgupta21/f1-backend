@@ -54,7 +54,7 @@ public class Team {
     private List<User> users = new ArrayList<>();
 
     @JoinColumn(name = "drivelog_id")
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL)
     private List<DriveLog> drivelogs = new ArrayList<>();
 
     public Team(String name, String location) {
