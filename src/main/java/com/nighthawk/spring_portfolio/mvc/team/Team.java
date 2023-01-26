@@ -53,7 +53,7 @@ public class Team {
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     private List<User> users = new ArrayList<>();
 
-    @JoinColumn(name = "drivelog_id")
+    @JoinColumn(name = "team_id")
     @OneToMany(cascade = CascadeType.ALL)
     private List<DriveLog> drivelogs = new ArrayList<>();
 
