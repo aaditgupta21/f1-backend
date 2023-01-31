@@ -33,7 +33,6 @@ The last annotation connect to database
 @NoArgsConstructor
 @Entity
 public class Team {
-
     // automatic unique identifier for Person record
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

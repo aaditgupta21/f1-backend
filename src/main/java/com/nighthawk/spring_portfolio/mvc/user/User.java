@@ -7,21 +7,27 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
@@ -71,9 +77,15 @@ public class User {
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date dob;
 
+    @Positive
+    private double f1Coin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
+    // @JoinColumn(name = "user_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Bet> bets = new ArrayList<>();
 
     // A custom getter to return age from dob attribute
     public int getAge() {
@@ -100,6 +112,7 @@ public class User {
         this.name = name;
         this.dob = dob;
         this.roles.add(role);
+        this.f1Coin = 10000.0;
     }
 
     public static void main(String[] args) {
