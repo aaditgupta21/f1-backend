@@ -67,6 +67,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .antMatchers("/api/auth/teamsList").permitAll()
                 .antMatchers("/api/races").permitAll()
+                .antMatchers("/api/auth/newUser").permitAll()
                 .antMatchers("/api/auth/newTeam").hasAnyAuthority("Admin")
 
                 // all other requests need to be authenticated
