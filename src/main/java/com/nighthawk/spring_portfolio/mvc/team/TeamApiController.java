@@ -65,6 +65,7 @@ public class TeamApiController {
             @RequestParam("name") String name,
             @RequestParam("dob") String dobString,
             @RequestParam("gender") char gender,
+            @RequestParam("f1coin") double f1coin,
             @RequestParam("teamName") String teamName) {
 
         // Create DOB
@@ -84,7 +85,7 @@ public class TeamApiController {
         if (team != null) {
             Role roleStudent = roleRepository.findByName("User");
             password = BCrypt.hashpw(password, BCrypt.gensalt());
-            User user = new User(email, password, gender, name, dob, roleStudent);
+            User user = new User(email, password, gender, name, dob, roleStudent, f1coin);
 
             team.getUsers().add(user);
             teamRepository.save(team); // conclude by writing the user updates
