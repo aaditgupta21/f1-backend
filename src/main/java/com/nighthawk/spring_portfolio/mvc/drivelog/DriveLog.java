@@ -14,7 +14,6 @@ import javax.persistence.Id;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
