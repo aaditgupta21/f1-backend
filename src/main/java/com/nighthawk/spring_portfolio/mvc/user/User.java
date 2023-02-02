@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
 
@@ -71,6 +72,9 @@ public class User {
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date dob;
 
+    @Positive
+    private double f1coin;
+
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
@@ -86,7 +90,7 @@ public class User {
 
     public String toString() {
         return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name
-                + ", " + "\"dob\": " + this.dob + ", " + "\"gender\": " + this.gender + " }");
+                + ", " + "\"dob\": " + this.dob + ", " + "\"gender\": " + this.gender + ", " + " \"f1coin\": " + this.f1coin + "}");
     }
 
     public String getAgeToString() {
@@ -100,6 +104,7 @@ public class User {
         this.name = name;
         this.dob = dob;
         this.roles.add(role);
+        this.f1coin = 100.0;
     }
 
     public static void main(String[] args) {
@@ -108,6 +113,7 @@ public class User {
         person.setDob(dob2);
         person.setName("John");
         person.setGender('M');
+        person.setF1coin(10000);
         System.out.println(person.toString());
         System.out.println(person.getAge());
     }
