@@ -16,6 +16,7 @@ import javax.persistence.Id;
 import javax.persistence.ManyToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
 
@@ -96,7 +97,7 @@ public class User {
         return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
     }
 
-    public User(String email, String password, char gender, String name, Date dob, Role role, double f1coin) {
+    public User(String email, String password, char gender, String name, Date dob, Role role) {
         this.email = email;
         this.password = password;
         this.gender = gender;
