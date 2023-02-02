@@ -24,7 +24,7 @@ public class Races {
 
     // GET schedule data
     @GetMapping("/races") // added to end of prefix as endpoint
-    public ResponseEntity<JSONObject> getRaces() {
+    public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
 
         // calls API once a day, sets body and status properties
         String today = new Date().toString().substring(0, 10);
@@ -34,7 +34,7 @@ public class Races {
                 // RapidAPI header
                 HttpRequest request = HttpRequest.newBuilder()
                         .uri(URI.create(
-                                "http://ergast.com/api/f1/races.json"))
+                                "http://ergast.com/api/f1/" + year + "/races.json"))
                         .method("GET", HttpRequest.BodyPublishers.noBody())
                         .build();
 
