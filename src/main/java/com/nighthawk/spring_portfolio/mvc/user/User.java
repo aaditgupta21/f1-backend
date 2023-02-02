@@ -78,7 +78,6 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-
     // A custom getter to return age from dob attribute
     public int getAge() {
         if (this.dob != null) {
@@ -90,7 +89,8 @@ public class User {
 
     public String toString() {
         return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name
-                + ", " + "\"dob\": " + this.dob + ", " + "\"gender\": " + this.gender + ", " + " \"f1coin\": " + this.f1coin + "}");
+                + ", " + "\"dob\": " + this.dob + ", " + "\"gender\": " + this.gender + ", " + " \"f1coin\": "
+                + this.f1coin + "}");
     }
 
     public String getAgeToString() {
