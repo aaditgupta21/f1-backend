@@ -84,7 +84,7 @@ public class TeamApiController {
         if (team != null) {
             Role roleStudent = roleRepository.findByName("User");
             password = BCrypt.hashpw(password, BCrypt.gensalt());
-            User user = new User(email, password, gender, name, dob, roleStudent);
+            User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
 
             team.getUsers().add(user);
             teamRepository.save(team); // conclude by writing the user updates

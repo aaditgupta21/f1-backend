@@ -97,14 +97,14 @@ public class User {
         return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
     }
 
-    public User(String email, String password, char gender, String name, Date dob, Role role) {
+    public User(String email, String password, char gender, String name, Date dob, Role role, double f1coin) {
         this.email = email;
         this.password = password;
         this.gender = gender;
         this.name = name;
         this.dob = dob;
         this.roles.add(role);
-        this.f1coin = 100.0;
+        this.f1coin = f1coin;
     }
 
     public static void main(String[] args) {
