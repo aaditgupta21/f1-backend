@@ -20,15 +20,10 @@ public class Races {
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
-    String last_run = null; // last run day of month
 
     // GET schedule data
     @GetMapping("/races") // added to end of prefix as endpoint
     public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
-
-        // calls API once a day, sets body and status properties
-        String today = new Date().toString().substring(0, 10);
-        if (last_run == null || !today.equals(last_run)) {
             try { // APIs can fail (ie Internet or Service down)
 
                 // RapidAPI header
@@ -45,7 +40,6 @@ public class Races {
                 // JSONParser extracts text body and parses to JSONObject
                 this.body = (JSONObject) new JSONParser().parse(response.body());
                 this.status = HttpStatus.OK; // 200 success
-                this.last_run = today;
             } catch (Exception e) { // capture failure info
                 HashMap<String, String> status = new HashMap<>();
                 status.put("status", "RapidApi failure: " + e);
@@ -53,9 +47,7 @@ public class Races {
                 // Setup object for error
                 this.body = (JSONObject) status;
                 this.status = HttpStatus.INTERNAL_SERVER_ERROR; // 500 error
-                this.last_run = null;
             }
-        }
 
         // return JSONObject in RESTful style
         return new ResponseEntity<>(body, status);
