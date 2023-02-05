@@ -61,7 +61,7 @@ public class User {
     @NotEmpty
     private String password;
 
-    private char gender;
+    private String gender;
 
     // @NonNull, etc placed in params of constructor: "@NonNull @Size(min = 2, max =
     // 30, message = "Name (2 to 30 chars)") String name"
@@ -97,7 +97,7 @@ public class User {
         return ("{ \"name\": " + this.name + " ," + "\"age\": " + this.getAge() + " }");
     }
 
-    public User(String email, String password, char gender, String name, Date dob, Role role, double f1coin) {
+    public User(String email, String password, String gender, String name, Date dob, Role role, double f1coin) {
         this.email = email;
         this.password = password;
         this.gender = gender;
@@ -112,7 +112,7 @@ public class User {
         Date dob2 = new GregorianCalendar(2006, 4, 2).getTime();
         person.setDob(dob2);
         person.setName("John");
-        person.setGender('M');
+        person.setGender("Male");
         person.setF1coin(10000);
         System.out.println(person.toString());
         System.out.println(person.getAge());

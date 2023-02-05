@@ -40,14 +40,15 @@ public class UserApiController {
 
     // creates new user
     @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newUser(@RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("name") String name,
-            @RequestParam("dob") String dobString,
-            @RequestParam("gender") char gender,
-            @RequestParam("teamName") String teamName) {
+    public ResponseEntity<Object> newUser(@RequestBody final Map<String, Object> map) {
 
         // Create DOB
+        String dobString = (String) map.get("dob");
+        String teamName = (String) map.get("teamName");
+        String email = (String) map.get("email");
+        String password = (String) map.get("password");
+        String gender = (String) map.get("gender");
+        String name = (String) map.get("name");
         Date dob;
 
         try {
