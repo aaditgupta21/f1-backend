@@ -47,7 +47,7 @@ public class UserApiController {
      * GET List of bets
      */
 
-    @GetMapping("/")
+    @GetMapping("/bets")
     public ResponseEntity<List<Bet>> getBets() {
         return new ResponseEntity<>(betRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
