@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
+import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
@@ -29,6 +31,9 @@ public class UserApiController {
     @Autowired
     private RoleJpaRepository roleRepository;
 
+    @Autowired
+    private BetJpaRepository betRepository;
+
     /*
      * GET List of users
      */
@@ -36,6 +41,15 @@ public class UserApiController {
     @GetMapping("/")
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
+    }
+
+    /*
+     * GET List of bets
+     */
+
+    @GetMapping("/")
+    public ResponseEntity<List<Bet>> getBets() {
+        return new ResponseEntity<>(betRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
     // creates new user
