@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLogJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 
 import java.util.*;
@@ -27,6 +28,9 @@ public class TeamApiController {
     @Autowired
     private RoleJpaRepository roleRepository;
 
+    @Autowired
+    private DriveLogJpaRepository driverLogJpaRepository;
+
     /*
      * GET List of Teams
      */
@@ -34,6 +38,14 @@ public class TeamApiController {
     @GetMapping("/")
     public ResponseEntity<List<Team>> getTeams() {
         return new ResponseEntity<>(teamRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
+    }
+
+    /*
+     * GET List of Teams
+     */
+    @GetMapping("/drivelogs")
+    public ResponseEntity<List<DriveLog>> getDriveLogs() {
+        return new ResponseEntity<>(driverLogJpaRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
     // TODO: needs security access since we only want admins to create a new team
@@ -75,5 +87,4 @@ public class TeamApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
-
 }
