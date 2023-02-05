@@ -12,11 +12,9 @@ import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.nighthawk.spring_portfolio.mvc.team.TeamJpaRepository;
-import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 
 import java.util.*;
 
-import org.springframework.transaction.annotation.Transactional;
 import java.text.SimpleDateFormat;
 
 @RestController
@@ -34,6 +32,7 @@ public class UserApiController {
     /*
      * GET List of users
      */
+
     @GetMapping("/")
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
