@@ -19,5 +19,8 @@ jobs:
           script: |
             cd /home/${{ secrets.USERNAME }}/tri2_t4_f1-backend_8102
             sudo docker-compose down
+            cd volumes
+            git checkout HEAD -- sqlite.db
+            cd ..
             git pull
             sudo docker-compose up -d --build
