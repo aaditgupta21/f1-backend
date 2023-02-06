@@ -4,8 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
+
+import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLogJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
@@ -64,7 +68,7 @@ public class TeamApiController {
             @RequestParam("password") String password,
             @RequestParam("name") String name,
             @RequestParam("dob") String dobString,
-            @RequestParam("gender") char gender,
+            @RequestParam("gender") String gender,
             @RequestParam("teamName") String teamName) {
 
         // Create DOB
@@ -107,6 +111,17 @@ public class TeamApiController {
             user.getRoles().add(role);
             userRepository.save(user);
             return new ResponseEntity<>(email + " role updated", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/updateCoins")
+    public ResponseEntity<Object> updateRole(@RequestParam("name") String name, @RequestParam("f1coin") double f1coin) {
+        User user = userRepository.findByName(name);
+        if (user != null) {
+            user.addF1Coin(f1coin);
+            userRepository.save(user);
+            return new ResponseEntity<>("Added " + f1coin + " F1Coins to " + name, HttpStatus.OK);
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
