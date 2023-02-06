@@ -90,13 +90,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and().csrf().disable()
                 // don't authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
-                .antMatchers("/api/races").permitAll()
                 .antMatchers("/api/user/newUser").permitAll()
-                .antMatchers("/api/user/").permitAll()
                 .antMatchers("/api/user/updateRole").permitAll()
-                .antMatchers("/api/team/").permitAll()
                 .antMatchers("/api/team/newTeam").hasAnyAuthority("Admin")
                 .antMatchers("/api/team/setDriverLog").permitAll()
+                .antMatchers("/api/race/races/*").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().
