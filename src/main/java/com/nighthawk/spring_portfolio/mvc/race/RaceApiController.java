@@ -1,4 +1,4 @@
-package com.nighthawk.spring_portfolio.controllers;
+package com.nighthawk.spring_portfolio.mvc.race;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -14,15 +14,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController // annotation to create a RESTful web services
-@RequestMapping("/api") // prefix of API
-
-public class Races {
+@RequestMapping("/api/race") // prefix of API
+public class RaceApiController {
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
 
     // GET schedule data
-    @GetMapping("/races") // added to end of prefix as endpoint
+    @PostMapping("/races") // added to end of prefix as endpoint
     public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
             try { // APIs can fail (ie Internet or Service down)
 

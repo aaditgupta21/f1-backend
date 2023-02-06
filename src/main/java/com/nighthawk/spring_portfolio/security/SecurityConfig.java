@@ -91,12 +91,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 // don't authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .antMatchers("/api/races").permitAll()
-                .antMatchers("/api/user/newUser").permitAll()
-                .antMatchers("/api/user/").permitAll()
-                .antMatchers("/api/user/updateRole").permitAll()
-                .antMatchers("/api/team/").permitAll()
-                .antMatchers("/api/team/newTeam").hasAnyAuthority("Admin")
-                .antMatchers("/api/team/setDriverLog").permitAll()
+                .antMatchers("/api/auth/newUser").permitAll()
+                .antMatchers("/api/auth/newTeam").hasAnyAuthority("Admin")
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().
