@@ -10,6 +10,8 @@ import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.race.Race;
+import com.nighthawk.spring_portfolio.mvc.race.RaceJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
@@ -30,6 +32,9 @@ public class UserApiController {
 
     @Autowired
     private RoleJpaRepository roleRepository;
+
+    @Autowired
+    private RaceJpaRepository raceRepository;
 
     @Autowired
     private BetJpaRepository betRepository;
@@ -104,5 +109,37 @@ public class UserApiController {
             return new ResponseEntity<>(email + " role updated", HttpStatus.OK);
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @PostMapping("/makeBet")
+    public ResponseEntity<Object> makeBet(@RequestParam("race") String raceName,
+            @RequestParam("raceSeason") String raceYear,
+            @RequestParam("team") String teamString,
+            @RequestParam("user") String userString,
+            @RequestParam("f1coins") double f1coins,
+            @RequestParam("date") String dateString) {
+
+        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
+        Team team = teamRepository.findByName(teamString);
+        User user = userRepository.findByName(userString);
+
+        Date date;
+
+        try {
+            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (user != null && team != null & race != null) {
+            Bet bet = new Bet(f1coins, date);
+            betRepository.save(bet);
+            return new ResponseEntity<>(
+                    userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + "f1Coins.",
+                    HttpStatus.OK);
+        }
+        return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
+
     }
 }
