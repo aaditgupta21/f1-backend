@@ -20,7 +20,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class DriveLog {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @DateTimeFormat(pattern = "MM-dd-yyyy")

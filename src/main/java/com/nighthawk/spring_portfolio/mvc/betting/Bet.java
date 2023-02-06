@@ -26,7 +26,7 @@ import lombok.NonNull;
 public class Bet {
     // automatic unique identifier for Person record
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     // @NonNull
