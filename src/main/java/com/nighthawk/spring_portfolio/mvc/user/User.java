@@ -96,6 +96,10 @@ public class User {
         return -1;
     }
 
+    public void addF1Coin(double newCoins){
+        this.f1coin += newCoins;
+    }
+
     public String toString() {
         return ("{ \"email\": " + this.email + ", " + "\"password\": " + this.password + ", " + "\"name\": " + this.name
                 + ", " + "\"dob\": " + this.dob + ", " + "\"gender\": " + this.gender + ", " + " \"f1coin\": "

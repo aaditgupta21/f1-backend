@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController // annotation to create a RESTful web services
-@RequestMapping("/race") // prefix of API
+@RequestMapping("/api/race") // prefix of API
 public class RaceApiController {
 
     @Autowired
@@ -26,8 +26,8 @@ public class RaceApiController {
     private HttpStatus status; // last run status
 
     // GET schedule data
-    @GetMapping("/races") // added to end of prefix as endpoint
-    public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
+    @GetMapping("/races/{year}") // added to end of prefix as endpoint
+    public ResponseEntity<JSONObject> getRaces(@PathVariable String year) {
         // calls API once a day, sets body and status properties
         try { // APIs can fail (ie Internet or Service down)
 
