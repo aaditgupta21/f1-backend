@@ -7,22 +7,27 @@ import java.util.Date;
 import java.util.ArrayList;
 import java.util.Collection;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
+import java.util.List;
 
 import org.hibernate.annotations.TypeDef;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
@@ -48,7 +53,7 @@ public class User {
     // GenerationType.IDENTITY used to prevent db locking (could use join column in
     // Team.java i think but oh well)
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // email, password, roles are key attributes to login and authentication
@@ -77,6 +82,10 @@ public class User {
 
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
+
+    // @JoinColumn(name = "user_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Bet> bets = new ArrayList<>();
 
     // A custom getter to return age from dob attribute
     public int getAge() {

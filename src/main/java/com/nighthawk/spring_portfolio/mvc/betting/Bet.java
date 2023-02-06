@@ -12,6 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.nighthawk.spring_portfolio.mvc.race.Race;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
+import com.nighthawk.spring_portfolio.mvc.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,7 +26,7 @@ import lombok.NonNull;
 public class Bet {
     // automatic unique identifier for Person record
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     // @NonNull
@@ -33,6 +34,9 @@ public class Bet {
 
     // @NonNull
     // private Team team;
+
+    // @NonNull
+    // private User user;
 
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date date;

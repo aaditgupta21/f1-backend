@@ -13,6 +13,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.List;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 
@@ -56,6 +57,10 @@ public class Team {
     @JoinColumn(name = "team_id")
     @OneToMany(cascade = CascadeType.ALL)
     private List<DriveLog> drivelogs = new ArrayList<>();
+
+    // @JoinColumn(name = "team_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Bet> bets = new ArrayList<>();
 
     public Team(String name, String location) {
         this.name = name;
