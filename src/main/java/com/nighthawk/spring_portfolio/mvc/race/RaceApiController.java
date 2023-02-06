@@ -22,7 +22,7 @@ public class RaceApiController {
 
     // GET schedule data
     @GetMapping("/races/{year}") // added to end of prefix as endpoint
-    public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
+    public ResponseEntity<JSONObject> getRaces(@PathVariable String year) {
             try { // APIs can fail (ie Internet or Service down)
 
                 // RapidAPI header
