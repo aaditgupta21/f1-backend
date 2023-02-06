@@ -16,7 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController // annotation to create a RESTful web services
-@RequestMapping("/race") // prefix of API
+@RequestMapping("/api/race") // prefix of API
 public class RaceApiController {
 
     @Autowired
