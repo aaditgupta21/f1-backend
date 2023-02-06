@@ -21,7 +21,7 @@ public class RaceApiController {
     private HttpStatus status; // last run status
 
     // GET schedule data
-    @PostMapping("/races") // added to end of prefix as endpoint
+    @GetMapping("/races/{year}") // added to end of prefix as endpoint
     public ResponseEntity<JSONObject> getRaces(@RequestParam("year") String year) {
             try { // APIs can fail (ie Internet or Service down)
 
