@@ -45,9 +45,9 @@ public class Race {
     @NotEmpty
     private String season;
 
-    // @JoinColumn(name = "race_id")
-    // @OneToMany(cascade = CascadeType.ALL)
-    // private List<Bet> bets = new ArrayList<>();
+    @JoinColumn(name = "race_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Bet> bets = new ArrayList<>();
 
     public Race(String name, String circuit, Date date, int round, String location, String season) {
         this.name = name;

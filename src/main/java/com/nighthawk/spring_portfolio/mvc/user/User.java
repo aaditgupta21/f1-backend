@@ -83,9 +83,9 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    // @JoinColumn(name = "user_id")
-    // @OneToMany(cascade = CascadeType.ALL)
-    // private List<Bet> bets = new ArrayList<>();
+    @JoinColumn(name = "user_id")
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<Bet> bets = new ArrayList<>();
 
     // A custom getter to return age from dob attribute
     public int getAge() {
@@ -96,7 +96,7 @@ public class User {
         return -1;
     }
 
-    public void addF1Coin(double newCoins){
+    public void addF1Coin(double newCoins) {
         this.f1coin += newCoins;
     }
 
