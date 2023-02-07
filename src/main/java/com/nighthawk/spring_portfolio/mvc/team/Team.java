@@ -63,9 +63,9 @@ public class Team {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Notes> notes = new ArrayList<>();
 
-    @JoinColumn(name = "team_id")
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Item> item = new ArrayList<>();
+    // @JoinColumn(name = "team_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Item> item = new ArrayList<>();
 
     @JoinColumn(name = "team_id")
     @OneToMany(cascade = CascadeType.ALL)

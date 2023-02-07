@@ -1,6 +1,5 @@
 package com.nighthawk.spring_portfolio.mvc.store;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -15,9 +14,10 @@ Extends the JpaRepository interface from Spring Data JPA.
  */
 
 public interface ItemJpaRepository extends JpaRepository<Item, Long> {
-    Item findByName(String name);
+    Item findByPartType(String name);
 
-    List<Item> findAllByOrderByNameAsc();
+    List<Item> findAllByOrderByPartTypeAsc();
+
     List<Item> findAllByOrderByIdAsc();
 
     // Custom JPA query
