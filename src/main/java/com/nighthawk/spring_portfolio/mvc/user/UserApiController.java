@@ -134,12 +134,17 @@ public class UserApiController {
 
         if (user != null && team != null & race != null) {
             Bet bet = new Bet(f1coins, date);
+
+            // add bets to array list
+            race.getBets().add(bet);
+            team.getBets().add(bet);
+            user.getBets().add(bet);
+
             betRepository.save(bet);
             return new ResponseEntity<>(
                     userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + "f1Coins.",
                     HttpStatus.OK);
         }
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
-
     }
 }

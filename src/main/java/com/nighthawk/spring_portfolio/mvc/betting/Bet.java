@@ -29,15 +29,6 @@ public class Bet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    // @NonNull
-    // private Race race;
-
-    // @NonNull
-    // private Team team;
-
-    // @NonNull
-    // private User user;
-
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date date;
 
@@ -45,8 +36,6 @@ public class Bet {
     private double fCoinBet;
 
     public Bet(double fCoinBet, Date date) {
-        // this.race = race;
-        // this.team = team;
         this.fCoinBet = fCoinBet;
         this.date = date;
     }
