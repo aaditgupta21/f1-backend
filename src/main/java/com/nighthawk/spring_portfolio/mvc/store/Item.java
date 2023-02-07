@@ -7,6 +7,10 @@ import lombok.NoArgsConstructor;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -42,8 +46,8 @@ public class Item {
     @NotEmpty
     private String imageUrl;
 
-
-    public Item(String partType, String description, double weight, Date endDate,  double initialCost, double currentCost, String imageUrl) {
+    public Item(String partType, String description, double weight, Date endDate, double initialCost,
+            double currentCost, String imageUrl) {
         this.partType = partType;
         this.description = description;
         this.currentCost = currentCost;
