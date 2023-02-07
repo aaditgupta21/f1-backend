@@ -23,6 +23,8 @@ public interface RaceJpaRepository extends JpaRepository<Race, Long> {
 
     List<Race> findAllByNameIgnoreCaseAndSeason(String name, String season);
 
+    List<Race> findAllByDate(Date date);
+
     // Custom JPA query
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
     List<Race> findByLikeTermNative(String term);

@@ -147,4 +147,20 @@ public class UserApiController {
         }
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
+
+    // TODO: need to make periodic checks on race dates to get bets in
+    @PostMapping
+    public ResponseEntity<Object> processBet(@RequestParam("date") String dateString) {
+        Date date;
+
+        try {
+            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+    }
+
 }
