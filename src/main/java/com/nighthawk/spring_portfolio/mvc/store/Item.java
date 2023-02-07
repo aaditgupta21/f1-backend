@@ -21,7 +21,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 @Entity
 public class Item {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotEmpty
@@ -31,15 +31,28 @@ public class Item {
     private String description;
 
     @Positive
-    private double cost;
+    private double initialCost;
+
+    @Positive
+    private double currentCost;
 
     @Positive
     private double weight;
 
-    public Item(String partType, String description, double cost, double weight) {
+    @DateTimeFormat(pattern = "MM-dd-yyyy")
+    private Date endDate;
+
+    @NotEmpty
+    private String imageUrl;
+
+
+    public Item(String partType, String description, double weight, Date endDate,  double initialCost, double currentCost, String imageUrl) {
         this.partType = partType;
         this.description = description;
-        this.cost = cost;
+        this.currentCost = currentCost;
+        this.initialCost = initialCost;
         this.weight = weight;
+        this.endDate = endDate;
+        this.imageUrl = imageUrl;
     }
 }

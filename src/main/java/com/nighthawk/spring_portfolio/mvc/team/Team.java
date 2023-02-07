@@ -64,6 +64,10 @@ public class Team {
 
     @JoinColumn(name = "team_id")
     @OneToMany(cascade = CascadeType.ALL)
+    private List<Notes> item = new ArrayList<>();
+
+    @JoinColumn(name = "team_id")
+    @OneToMany(cascade = CascadeType.ALL)
     private List<Bet> bets = new ArrayList<>();
 
     public Team(String name, String location) {
