@@ -79,9 +79,13 @@ public class UserApiController {
 
         // find team by name
         Team team = teamRepository.findByName(teamName);
+        User userBruh = userRepository.findByEmail(email);
 
         // if team is not null then it adds user to db, if not it sends bad request
         if (team != null) {
+            if (userBruh != null) {
+                return new ResponseEntity<>("user already exists", HttpStatus.BAD_REQUEST);
+            }
             Role roleStudent = roleRepository.findByName("User");
             password = BCrypt.hashpw(password, BCrypt.gensalt());
             User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
@@ -140,6 +144,8 @@ public class UserApiController {
             team.getBets().add(bet);
             user.getBets().add(bet);
 
+            user.addF1Coin(-1 * f1coins);
+
             betRepository.save(bet);
             return new ResponseEntity<>(
                     userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + "f1Coins.",
@@ -148,19 +154,45 @@ public class UserApiController {
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: need to make periodic checks on race dates to get bets in
-    @PostMapping
-    public ResponseEntity<Object> processBet(@RequestParam("date") String dateString) {
-        Date date;
+    // // TODO: need to make periodic checks on race dates to get bets in
+    // // make this a check for teams as well???
+    // @PostMapping
+    // public ResponseEntity<Object> processBet(@RequestParam("date") String
+    // dateString) {
+    // Date date;
 
-        try {
-            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
-        } catch (Exception e) {
-            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
-                    HttpStatus.BAD_REQUEST);
-        }
+    // try {
+    // date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+    // } catch (Exception e) {
+    // return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+    // HttpStatus.BAD_REQUEST);
+    // }
 
-        return new ResponseEntity<>("all bets updated", HttpStatus.OK);
-    }
+    // Race race = raceRepository.findAllByDate(date);
+    // String raceResultWinner = race.getRaceResultWinner();
+
+    // if (race != null) {
+    // return new ResponseEntity<>("race does not exist",
+    // HttpStatus.BAD_REQUEST);
+    // }
+
+    // List<Bet> bets = race.getBets();
+
+    // for (Bet bet : bets) {
+    // // TODO: need to pull from bets columns??
+    // Team team = teamRepository.findByBet(bet);
+    // if (raceResultWinner.equals(team.getName())) {
+    // User user = userRepository.findByBet(bet);
+    // user.addF1Coin(2 * bet.getFCoinBet());
+
+    // userRepository.save(user);
+    // }
+
+    // bet.setBetActive(false);
+    // betRepository.save(bet);
+    // }
+
+    // return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+    // }
 
 }

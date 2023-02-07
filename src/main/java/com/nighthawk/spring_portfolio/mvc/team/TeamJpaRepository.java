@@ -4,6 +4,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
+
 import java.util.List;
 
 /*
@@ -15,6 +17,8 @@ Extends the JpaRepository interface from Spring Data JPA.
 
 public interface TeamJpaRepository extends JpaRepository<Team, Long> {
     Team findByName(String name);
+
+    // Team findByBet(Bet bet);
 
     List<Team> findAllByOrderByNameAsc();
 

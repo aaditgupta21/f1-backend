@@ -68,8 +68,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         final CorsConfiguration config = new CorsConfiguration();
         config.setAllowedOrigins(Arrays.asList("http://localhost:4000", "https://aaditgupta21.github.io"));
         config.setAllowCredentials(true);
-        // config.addAllowedOrigin("*");
         config.addAllowedHeader("*");
+        config.addAllowedMethod("*");
         config.addAllowedMethod("OPTIONS");
         config.addAllowedMethod("HEAD");
         config.addAllowedMethod("GET");
