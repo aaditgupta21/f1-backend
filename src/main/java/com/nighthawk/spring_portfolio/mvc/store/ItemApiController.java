@@ -45,7 +45,7 @@ public class ItemApiController {
                 }
         Item item = new Item(partType, description, weight, date, currentCost, initialCost, imageUrl);
         itemJpaRepository.save(item);
-        return new ResponseEntity<>(partType + "  has been successfully put up for sale!", HttpStatus.CREATED);
+        return new ResponseEntity<>(partType + " listed successfully!", HttpStatus.CREATED);
     }
 
     /*
