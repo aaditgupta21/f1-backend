@@ -5,6 +5,7 @@ import com.nighthawk.spring_portfolio.mvc.jwt.*;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.header.writers.StaticHeadersWriter;
 
 import java.util.Arrays;
 
@@ -62,32 +63,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
-    @Bean
-    public CorsFilter corsFilter() {
-        final UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        final CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOrigins(Arrays.asList("http://localhost:4000", "https://aaditgupta21.github.io"));
-        config.setAllowCredentials(true);
-        config.addAllowedHeader("*");
-        config.addAllowedMethod("*");
-        config.addAllowedMethod("OPTIONS");
-        config.addAllowedMethod("HEAD");
-        config.addAllowedMethod("GET");
-        config.addAllowedMethod("PUT");
-        config.addAllowedMethod("POST");
-        config.addAllowedMethod("DELETE");
-        config.addAllowedMethod("PATCH");
-        source.registerCorsConfiguration("/**", config);
-        return new CorsFilter(source);
-    }
-
     // Provide a default configuration using configure(HttpSecurity http)
     @Override
     protected void configure(HttpSecurity httpSecurity) throws Exception {
         // httpSecurity.csrf().disable();
         httpSecurity
                 // We don't need CSRF for this example
-                .cors().and().csrf().disable()
+                .csrf().disable()
                 // don't authenticate this particular request
                 .authorizeRequests().antMatchers("/authenticate").permitAll()
                 .antMatchers("/api/user/newUser").permitAll()
@@ -102,10 +84,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/race/races/*").permitAll()
 
                 // all other requests need to be authenticated
-                .anyRequest().authenticated().and().
+                .anyRequest().authenticated().and().cors().and()
+                .headers()
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Credentials", "true"))
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-ExposedHeaders", "*", "Authorization"))
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Content-Type",
+                        "Authorization", "x-csrf-token"))
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-MaxAge", "600"))
+                .addHeaderWriter(
+                        new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET", "OPTIONS", "HEAD"))
+                .and()
                 // make sure we use stateless session; session won't be used to
                 // store user's state.
-                exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
+                .exceptionHandling().authenticationEntryPoint(jwtAuthenticationEntryPoint).and().sessionManagement()
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         // Add a filter to validate the tokens with every request
