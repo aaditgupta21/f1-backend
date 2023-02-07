@@ -35,9 +35,15 @@ public class Bet {
     @PositiveOrZero
     private double fCoinBet;
 
+    @NonNull
+    private boolean betActive;
+
     public Bet(double fCoinBet, Date date) {
         this.fCoinBet = fCoinBet;
         this.date = date;
+
+        // TODO: gotta do check for current day and make false if date passed
+        this.betActive = true;
     }
 
     // public String toString() {
