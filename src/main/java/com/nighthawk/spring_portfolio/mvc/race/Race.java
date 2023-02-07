@@ -45,6 +45,11 @@ public class Race {
     @NotEmpty
     private String season;
 
+    // TODO: fix this since idk how we want to handle results of a race
+    // api should copy bets ig
+    @NotEmpty
+    private String raceResultWinner;
+
     @JoinColumn(name = "race_id")
     @OneToMany(cascade = CascadeType.ALL)
     private List<Bet> bets = new ArrayList<>();
@@ -56,6 +61,7 @@ public class Race {
         this.round = round;
         this.location = location;
         this.season = season;
+        this.raceResultWinner = null;
     }
 
     // TODO: add season
