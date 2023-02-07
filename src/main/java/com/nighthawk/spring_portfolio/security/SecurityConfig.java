@@ -93,6 +93,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/newUser").permitAll()
                 .antMatchers("/api/user/updateRole").permitAll()
                 .antMatchers("/api/team/newTeam").hasAnyAuthority("Admin")
+                .antMatchers("/api/team/").permitAll()
+                .antMatchers("/api/user/").permitAll()
+                .antMatchers("/api/user/bets").permitAll()
                 .antMatchers("/api/team/setDriverLog").permitAll()
                 .antMatchers("/api/race/races/*").permitAll()
 
