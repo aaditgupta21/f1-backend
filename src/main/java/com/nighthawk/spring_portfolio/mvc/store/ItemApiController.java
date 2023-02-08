@@ -45,6 +45,24 @@ public class ItemApiController {
                 }
         Item item = new Item(partType, description, weight, date, currentCost, initialCost, imageUrl);
         itemJpaRepository.save(item);
+        // if team is not null then it adds user to db, if not it sends bad request
+        if (team != null) {
+            if (userBruh != null) {
+                return new ResponseEntity<>("user already exists", HttpStatus.BAD_REQUEST);
+            }
+            Role roleStudent = roleRepository.findByName("User");
+            password = BCrypt.hashpw(password, BCrypt.gensalt());
+            User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
+
+            team.getUsers().add(user);
+            teamRepository.save(team); // conclude by writing the user updates
+
+            // return email (or return w message of successfully created user)
+            return new ResponseEntity<>(email + " user created successfully", HttpStatus.OK);
+        } else {
+            // returns team name could not be found and bad request
+            return new ResponseEntity<>("team name is invalid", HttpStatus.BAD_REQUEST);
+        }
         return new ResponseEntity<>(partType + " listed successfully!", HttpStatus.CREATED);
     }
 
