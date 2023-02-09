@@ -137,8 +137,8 @@ public class UserApiController {
 
             // add bets to array list
             race.getBets().add(bet);
-            team.getBets().add(bet);
-            user.getBets().add(bet);
+            bet.setTeam(team);
+            bet.setUser(user);
 
             user.addF1Coin(-1 * f1coins);
 
@@ -150,45 +150,43 @@ public class UserApiController {
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
 
-    // // TODO: need to make periodic checks on race dates to get bets in
-    // // make this a check for teams as well???
-    // @PostMapping
-    // public ResponseEntity<Object> processBet(@RequestParam("date") String
-    // dateString) {
-    // Date date;
+    // TODO: need to make periodic checks on race dates to get bets in
+    // make this a check for teams as well???
+    @PostMapping
+    public ResponseEntity<Object> processBet(@RequestParam("date") String dateString) {
+        Date date;
 
-    // try {
-    // date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
-    // } catch (Exception e) {
-    // return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
-    // HttpStatus.BAD_REQUEST);
-    // }
+        try {
+            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
 
-    // Race race = raceRepository.findAllByDate(date);
-    // String raceResultWinner = race.getRaceResultWinner();
+        Race race = raceRepository.findByDate(date);
+        String raceResultWinner = race.getRaceResultWinner();
 
-    // if (race != null) {
-    // return new ResponseEntity<>("race does not exist",
-    // HttpStatus.BAD_REQUEST);
-    // }
+        if (race != null) {
+            return new ResponseEntity<>("race does not exist",
+                    HttpStatus.BAD_REQUEST);
+        }
 
-    // List<Bet> bets = race.getBets();
+        List<Bet> bets = race.getBets();
 
-    // for (Bet bet : bets) {
-    // // TODO: need to pull from bets columns??
-    // Team team = teamRepository.findByBet(bet);
-    // if (raceResultWinner.equals(team.getName())) {
-    // User user = userRepository.findByBet(bet);
-    // user.addF1Coin(2 * bet.getFCoinBet());
+        for (Bet bet : bets) {
+            // TODO: need to pull from bets columns??
+            Team team = bet.getTeam();
+            if (raceResultWinner.equals(team.getName()) && bet.getBetActive()) {
+                User user = bet.getUser();
+                user.addF1Coin(2 * bet.getFCoinBet());
 
-    // userRepository.save(user);
-    // }
+                userRepository.save(user);
+            }
 
-    // bet.setBetActive(false);
-    // betRepository.save(bet);
-    // }
+            bet.setBetActive(false);
+            betRepository.save(bet);
+        }
 
-    // return new ResponseEntity<>("all bets updated", HttpStatus.OK);
-    // }
-
+        return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+    }
 }

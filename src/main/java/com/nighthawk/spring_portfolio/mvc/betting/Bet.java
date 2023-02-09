@@ -2,10 +2,13 @@ package com.nighthawk.spring_portfolio.mvc.betting;
 
 import java.util.Date;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -38,12 +41,24 @@ public class Bet {
     @NonNull
     private boolean betActive;
 
+    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private User user;
+
+    @JoinColumn(name = "team_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Team team;
+
     public Bet(double fCoinBet, Date date) {
         this.fCoinBet = fCoinBet;
         this.date = date;
 
         // TODO: gotta do check for current day and make false if date passed
         this.betActive = true;
+    }
+
+    public boolean getBetActive() {
+        return this.betActive;
     }
 
     // public String toString() {

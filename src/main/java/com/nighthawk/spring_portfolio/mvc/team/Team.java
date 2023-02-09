@@ -67,9 +67,9 @@ public class Team {
     @OneToMany(cascade = CascadeType.ALL)
     private List<Item> item = new ArrayList<>();
 
-    @JoinColumn(name = "team_id")
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Bet> bets = new ArrayList<>();
+    // @JoinColumn(name = "team_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Bet> bets = new ArrayList<>();
 
     public Team(String name, String location) {
         this.name = name;
