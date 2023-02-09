@@ -76,12 +76,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/updateRole").permitAll()
                 .antMatchers("/api/team/newTeam").hasAnyAuthority("Admin")
                 .antMatchers("/api/team/").permitAll()
-                .antMatchers("/api/user/").permitAll()
+                .antMatchers("/api/user/").hasAnyAuthority("User")
                 .antMatchers("/api/item/").permitAll()
                 .antMatchers("/api/item/newItem").permitAll()
                 .antMatchers("/api/user/bets").permitAll()
                 .antMatchers("/api/team/setDriverLog").permitAll()
-                // .antMatchers("/api/race/races/*").hasAnyAuthority("User")
+                .antMatchers("/api/race/races/*").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().cors().and()
