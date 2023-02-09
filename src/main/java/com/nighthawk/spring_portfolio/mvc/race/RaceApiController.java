@@ -4,6 +4,7 @@ import java.net.URI;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -15,12 +16,28 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
+import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.team.Team;
+import com.nighthawk.spring_portfolio.mvc.user.User;
+import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
+
 @RestController // annotation to create a RESTful web services
 @RequestMapping("/api/race") // prefix of API
 public class RaceApiController {
 
     @Autowired
-    private RaceJpaRepository raceJpaRepository;
+    private RoleJpaRepository roleRepository;
+
+    @Autowired
+    private RaceJpaRepository raceRepository;
+
+    @Autowired
+    private BetJpaRepository betRepository;
+
+    @Autowired
+    private UserJpaRepository userRepository;
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
@@ -63,6 +80,45 @@ public class RaceApiController {
      */
     @GetMapping("/")
     public ResponseEntity<List<Race>> getTeams() {
-        return new ResponseEntity<>(raceJpaRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
+        return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
+
+    @PostMapping
+    public ResponseEntity<Object> raceResults(@RequestParam("date") String dateString) {
+        Date date;
+
+        try {
+            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        Race race = raceRepository.findByDate(date);
+        String raceResultWinner = race.getRaceResultWinner();
+
+        if (race != null) {
+            return new ResponseEntity<>("race does not exist",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        List<Bet> bets = race.getBets();
+
+        for (Bet bet : bets) {
+            // TODO: need to pull from bets columns??
+            Team team = bet.getTeam();
+            if (raceResultWinner.equals(team.getName()) && bet.getBetActive()) {
+                User user = bet.getUser();
+                user.addF1Coin(2 * bet.getFCoinBet());
+
+                userRepository.save(user);
+            }
+
+            bet.setBetActive(false);
+            betRepository.save(bet);
+        }
+
+        return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+    }
+
 }
