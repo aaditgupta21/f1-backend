@@ -83,7 +83,7 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    @PostMapping
+    @PostMapping("/raceResults")
     public ResponseEntity<Object> raceResults(@RequestParam("date") String dateString) {
         Date date;
 
