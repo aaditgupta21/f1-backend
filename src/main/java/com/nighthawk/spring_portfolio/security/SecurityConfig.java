@@ -76,7 +76,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/updateRole").permitAll()
                 .antMatchers("/api/team/newTeam").hasAnyAuthority("Admin")
                 .antMatchers("/api/team/").permitAll()
-                .antMatchers("/api/user/").permitAll()
+                .antMatchers("/api/user/").hasAnyAuthority("User")
                 .antMatchers("/api/item/").permitAll()
                 .antMatchers("/api/item/newItem").permitAll()
                 .antMatchers("/api/user/bets").permitAll()
@@ -88,8 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .headers()
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Credentials", "true"))
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-ExposedHeaders", "*", "Authorization"))
-                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Content-Type",
-                        "Authorization", "x-csrf-token"))
+                .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-Headers", "Content-Type", "Authorization", "x-csrf-token"))
                 .addHeaderWriter(new StaticHeadersWriter("Access-Control-Allow-MaxAge", "600"))
                 .addHeaderWriter(
                         new StaticHeadersWriter("Access-Control-Allow-Methods", "POST", "GET", "OPTIONS", "HEAD"))
