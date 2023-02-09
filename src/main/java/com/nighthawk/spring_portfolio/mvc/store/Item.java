@@ -63,11 +63,6 @@ public class Item {
         Date endDate = new GregorianCalendar(2006, 4, 2).getTime();
         engine.setPartType("Engine");
         engine.setDescription("John");
-        engine.setCurrentCost("999");
-        engine.setCurrentCost("999");
-        engine.setGender("Male");
-        engine.setF1coin(10000);
-        System.out.println(person.toString());
-        System.out.println(person.getAge());
+        engine.setCurrentCost(999);
     }
 }
