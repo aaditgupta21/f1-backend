@@ -79,9 +79,13 @@ public class UserApiController {
 
         // find team by name
         Team team = teamRepository.findByName(teamName);
+        User userBruh = userRepository.findByEmail(email);
 
         // if team is not null then it adds user to db, if not it sends bad request
         if (team != null) {
+            if (userBruh != null) {
+                return new ResponseEntity<>("user already exists", HttpStatus.BAD_REQUEST);
+            }
             Role roleStudent = roleRepository.findByName("User");
             password = BCrypt.hashpw(password, BCrypt.gensalt());
             User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
