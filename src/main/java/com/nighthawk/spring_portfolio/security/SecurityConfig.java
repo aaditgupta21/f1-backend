@@ -82,6 +82,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/user/bets").permitAll()
                 .antMatchers("/api/team/setDriverLog").permitAll()
                 .antMatchers("/api/race/races/*").permitAll()
+                .antMatchers("/api/bets/").permitAll()
+                .antMatchers("/").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().cors().and()

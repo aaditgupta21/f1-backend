@@ -4,13 +4,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.web.bind.annotation.*;
 
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
-import com.nighthawk.spring_portfolio.mvc.role.Role;
-import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLogJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 
@@ -28,9 +25,6 @@ public class TeamApiController {
 
     @Autowired
     private UserJpaRepository userRepository;
-
-    @Autowired
-    private RoleJpaRepository roleRepository;
 
     @Autowired
     private DriveLogJpaRepository driverLogJpaRepository;
@@ -54,86 +48,38 @@ public class TeamApiController {
 
     // TODO: needs security access since we only want admins to create a new team
     @PostMapping(value = "/newTeam", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newTeam(@RequestParam("name") String name,
-            @RequestParam("location") String location) {
+    public ResponseEntity<Object> newTeam(@RequestBody final Map<String, Object> map) {
 
+        String name = (String) map.get("name");
+        String location = (String) map.get("location");
         Team team = new Team(name, location);
         teamRepository.save(team);
         return new ResponseEntity<>(name + " team has been successfully created", HttpStatus.CREATED);
     }
 
-    // creates new user
-    @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newUser(@RequestParam("email") String email,
-            @RequestParam("password") String password,
-            @RequestParam("name") String name,
-            @RequestParam("dob") String dobString,
-            @RequestParam("gender") String gender,
-            @RequestParam("teamName") String teamName) {
-
-        // Create DOB
-        Date dob;
-
-        try {
-            dob = new SimpleDateFormat("MM-dd-yyyy").parse(dobString);
-        } catch (Exception e) {
-            return new ResponseEntity<>(dobString + " error; try MM-dd-yyyy",
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        // find team by name
-        Team team = teamRepository.findByName(teamName);
-
-        // if team is not null then it adds user to db, if not it sends bad request
-        if (team != null) {
-            Role roleStudent = roleRepository.findByName("User");
-            password = BCrypt.hashpw(password, BCrypt.gensalt());
-            User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
-
-            team.getUsers().add(user);
-            teamRepository.save(team); // conclude by writing the user updates
-
-            // return email (or return w message of successfully created user)
-            return new ResponseEntity<>(email + " user created successfully", HttpStatus.OK);
-        } else {
-            // returns team name could not be found and bad request
-            return new ResponseEntity<>("team name is invalid", HttpStatus.BAD_REQUEST);
-        }
-
-    }
-
-    @PostMapping("/updateRole")
-    public ResponseEntity<Object> updateRole(@RequestParam("email") String email,
-            @RequestParam("roleName") String roleName) {
-        User user = userRepository.findByEmail(email);
-        if (user != null) {
-            Role role = roleRepository.findByName(roleName);
-            user.getRoles().add(role);
-            userRepository.save(user);
-            return new ResponseEntity<>(email + " role updated", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
-    }
 
     @PostMapping("/updateCoins")
-    public ResponseEntity<Object> updateRole(@RequestParam("name") String name, @RequestParam("f1coin") double f1coin) {
-        User user = userRepository.findByName(name);
+    public ResponseEntity<Object> updateCoins(@RequestBody final Map<String, Object> map) {
+        String email = (String) map.get("email");
+        Double f1coin = (Double) map.get("f1coin");
+        User user = userRepository.findByName(email);
         if (user != null) {
             user.addF1Coin(f1coin);
             userRepository.save(user);
-            return new ResponseEntity<>("Added " + f1coin + " F1Coins to " + name, HttpStatus.OK);
+            return new ResponseEntity<>("Added " + f1coin + " F1Coins to " + email, HttpStatus.OK);
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
     @Transactional
     @PostMapping(value = "/setDriverLog", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> driverLog(@RequestParam("teamName") String teamName,
-            @RequestParam("date") String dateString,
-            @RequestParam("miles") double miles,
-            @RequestParam("time") double time) {
+    public ResponseEntity<Object> driverLog(@RequestBody final Map<String, Object> map) {
 
         // find the person by ID
+        String teamName = (String) map.get("teamName");
+        String dateString = (String) map.get("date");
+        Double miles = (Double) map.get("miles");
+        Double time = (Double) map.get("time");
         Team team = teamRepository.findByName(teamName);
         if (team != null) { // Good ID
             Date date;

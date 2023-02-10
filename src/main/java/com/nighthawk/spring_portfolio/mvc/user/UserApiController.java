@@ -48,14 +48,6 @@ public class UserApiController {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
 
-    /*
-     * GET List of bets
-     */
-
-    @GetMapping("/bets")
-    public ResponseEntity<List<Bet>> getBets() {
-        return new ResponseEntity<>(betRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
-    }
 
     // creates new user
     @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -103,8 +95,9 @@ public class UserApiController {
     }
 
     @PostMapping("/updateRole")
-    public ResponseEntity<Object> updateRole(@RequestParam("email") String email,
-            @RequestParam("roleName") String roleName) {
+    public ResponseEntity<Object> updateRole(@RequestBody final Map<String, Object> map) {
+        String email = (String) map.get("email");
+        String roleName = (String) map.get("roleName");
         User user = userRepository.findByEmail(email);
         if (user != null) {
             Role role = roleRepository.findByName(roleName);
@@ -114,15 +107,14 @@ public class UserApiController {
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
-
     @PostMapping("/makeBet")
-    public ResponseEntity<Object> makeBet(@RequestParam("race") String raceName,
-            @RequestParam("raceSeason") String raceYear,
-            @RequestParam("team") String teamString,
-            @RequestParam("user") String userString,
-            @RequestParam("f1coins") double f1coins,
-            @RequestParam("date") String dateString) {
-
+    public ResponseEntity<Object> makeBet(@RequestBody final Map<String, Object> map) {
+        String raceName = (String) map.get("race");
+        String raceYear = (String) map.get("raceSeason");
+        String teamString = (String) map.get("team");
+        String userString = (String) map.get("user");
+        Double f1coins = (Double) map.get("f1coins");
+        String dateString = (String) map.get("date");
         Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
         Team team = teamRepository.findByName(teamString);
         User user = userRepository.findByName(userString);
@@ -157,7 +149,8 @@ public class UserApiController {
     // TODO: need to make periodic checks on race dates to get bets in
     // make this a check for teams as well???
     @PostMapping
-    public ResponseEntity<Object> processBet(@RequestParam("date") String dateString) {
+    public ResponseEntity<Object> processBet(@RequestBody final Map<String, Object> map) {
+        String dateString = (String) map.get("date");
         Date date;
 
         try {
