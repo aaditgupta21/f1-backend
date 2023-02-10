@@ -82,12 +82,4 @@ public class RaceInit {
         }
     }
 
-    @Bean
-    CommandLineRunner races() { // The run() method will be executed after the application starts
-        return args -> {
-            for (int year = 1950; year <= 2022; year++) {
-                getRaceByYear(String.valueOf(year));
-            }
-        };
-    }
 }
