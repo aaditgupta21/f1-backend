@@ -122,7 +122,7 @@ public class UserApiController {
         Date date;
 
         try {
-            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
         } catch (Exception e) {
             return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
                     HttpStatus.BAD_REQUEST);
