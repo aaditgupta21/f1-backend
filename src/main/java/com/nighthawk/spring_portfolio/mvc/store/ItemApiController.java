@@ -30,10 +30,10 @@ public class ItemApiController {
     // GET schedule data
     @PostMapping(value = "/newItem", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newTeam(@RequestParam("partType") String partType,
-            @RequestParam("description") String description, 
+            @RequestParam("description") String description,
             @RequestParam("currentCost") double currentCost,
-            @RequestParam("initialCost") double initialCost, 
-            @RequestParam("endDate") String endDateString, 
+            @RequestParam("initialCost") double initialCost,
+            @RequestParam("endDate") String endDateString,
             @RequestParam("imageUrl") String imageUrl,
             @RequestParam("weight") double weight) {
                 Date date;
