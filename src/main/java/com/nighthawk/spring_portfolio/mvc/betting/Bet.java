@@ -13,14 +13,12 @@ import javax.validation.constraints.PositiveOrZero;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
-import com.nighthawk.spring_portfolio.mvc.race.Race;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
 
 @Data
 @AllArgsConstructor
@@ -38,7 +36,6 @@ public class Bet {
     @PositiveOrZero
     private double fCoinBet;
 
-    @NonNull
     private boolean betActive;
 
     @JoinColumn(name = "user_id")

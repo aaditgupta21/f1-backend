@@ -1,16 +1,9 @@
 package com.nighthawk.spring_portfolio.mvc.store;
 
-import java.net.URI;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
 
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -23,9 +16,6 @@ public class ItemApiController {
 
     @Autowired
     private ItemJpaRepository itemJpaRepository;
-
-    private JSONObject body; // last run result
-    private HttpStatus status; // last run status
 
     // GET schedule data
     @PostMapping(value = "/newItem", produces = MediaType.APPLICATION_JSON_VALUE)
