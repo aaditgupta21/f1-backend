@@ -42,10 +42,10 @@ public class Calendar {
     }
 
 
-    public Calendar(String event, String note, String dateOfEvent2) {
+    public Calendar(String event, String note, Date dateOfEvent) {
         this.event = event;
         this.note = note;
-        this.dateOfEvent = dateOfEvent2;
+        this.dateOfEvent = dateOfEvent;
     }
 
     public static void main(String[] args) {

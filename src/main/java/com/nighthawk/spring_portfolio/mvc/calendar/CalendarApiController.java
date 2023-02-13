@@ -29,7 +29,7 @@ public class CalendarApiController {
                     return new ResponseEntity<>(dateOfEvent + " error; try MM-dd-yyyy",
                             HttpStatus.BAD_REQUEST);
                 }
-        Calendar calendar2 = new Calendar(event, note, dateOfEvent);
+        Calendar calendar2 = new Calendar(event, note, date);
         calendarJpaRepository.save(calendar2);
         return new ResponseEntity<>(event + " listed successfully!", HttpStatus.CREATED);
     }
