@@ -19,19 +19,19 @@ public class CalendarApiController {
 
     // GET schedule data
     @PostMapping(value = "/newCalendar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newTeam(@RequestParam("entry") String entry,
-            @RequestParam("event") String event,
+    public ResponseEntity<Object> newTeam(@RequestParam("event") String event,
             @RequestParam("note") String note,
             @RequestParam("dateOfEvent") String dateOfEvent) {
                 Date date;
                 try {
                     date = new SimpleDateFormat("MM-dd-yyyy").parse(dateOfEvent);
                 } catch (Exception e) {
-                    return new ResponseEntity<>(date + " error; try MM-dd-yyyy",
+                    return new ResponseEntity<>(dateOfEvent + " error; try MM-dd-yyyy",
                             HttpStatus.BAD_REQUEST);
                 }
-        Calendar calendar = new Calendar(event, note, dateOfEvent);
-        calendarJpaRepository.save(calendar);
+        Calendar calendar2 = new Calendar(event, note, dateOfEvent);
+        calendarJpaRepository.save(calendar2);
+        return new ResponseEntity<>(event + " listed successfully!", HttpStatus.CREATED);
     }
 
     /*
