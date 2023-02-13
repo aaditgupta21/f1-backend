@@ -80,6 +80,7 @@ public class TeamApiController {
         String dateString = (String) map.get("date");
         Double miles = (Double) map.get("miles");
         Double time = (Double) map.get("time");
+        String raceName = (String) map.get("raceName");
         Team team = teamRepository.findByName(teamName);
         if (team != null) { // Good ID
             Date date;
@@ -89,7 +90,7 @@ public class TeamApiController {
                 return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
             }
 
-            DriveLog driverLog = new DriveLog(date, miles, time);
+            DriveLog driverLog = new DriveLog(date, miles, time, raceName);
             team.getDrivelogs().add(driverLog);
 
             teamRepository.save(team); // conclude by writing the stats updates

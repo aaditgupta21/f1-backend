@@ -32,9 +32,12 @@ public class DriveLog {
     @Positive
     private double time;
 
-    public DriveLog(Date date, double miles, double time) {
+    private String raceName;
+
+    public DriveLog(Date date, double miles, double time, String raceName) {
         this.date = date;
         this.miles = miles;
         this.time = time;
+        this.raceName = raceName;
     }
 }
