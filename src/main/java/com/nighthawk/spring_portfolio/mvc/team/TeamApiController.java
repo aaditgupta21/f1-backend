@@ -78,8 +78,10 @@ public class TeamApiController {
         // find the person by ID
         String teamName = (String) map.get("teamName");
         String dateString = (String) map.get("date");
-        Double miles = (Double) map.get("miles");
-        Double time = (Double) map.get("time");
+        String miles = (String) map.get("miles");
+        double miles2 = Double.parseDouble(miles);
+        String time = (String) map.get("time");
+        double time2 = Double.parseDouble(time);
         String raceName = (String) map.get("raceName");
         Team team = teamRepository.findByName(teamName);
         if (team != null) { // Good ID
@@ -90,13 +92,12 @@ public class TeamApiController {
                 return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
             }
 
-            DriveLog driverLog = new DriveLog(date, miles, time, raceName);
+            DriveLog driverLog = new DriveLog(date, miles2, time2, raceName);
             team.getDrivelogs().add(driverLog);
 
             teamRepository.save(team); // conclude by writing the stats updates
 
-            // return Person with update Stats
-            return new ResponseEntity<>(team, HttpStatus.OK);
+            return new ResponseEntity<>("DriveLog created successfully", HttpStatus.OK);
         }
         // return Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
