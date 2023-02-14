@@ -35,7 +35,7 @@ public class TeamApiController {
     // TODO: 500 error and idky
     @GetMapping("/")
     public ResponseEntity<List<Team>> getTeams() {
-        return new ResponseEntity<>(teamRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
+        return new ResponseEntity<>(teamRepository.findAllNative(), HttpStatus.OK);
     }
 
     /*
@@ -102,8 +102,8 @@ public class TeamApiController {
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
     }
-    @DeleteMapping("/drivelog/delete")
-    public ResponseEntity<DriveLog> deleteDriveLog(@RequestParam long id) {
+    @GetMapping("/drivelog/delete/{id}")
+    public ResponseEntity<DriveLog> deleteDriveLog(@PathVariable long id) {
         Optional<DriveLog> optional = driverLogJpaRepository.findById(id);
         if (optional.isPresent()) { // Good ID
             DriveLog driverLog = optional.get(); // value from findByID

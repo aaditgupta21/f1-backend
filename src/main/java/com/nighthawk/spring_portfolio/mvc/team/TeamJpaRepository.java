@@ -20,6 +20,10 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
 
     List<Team> findAllByOrderByNameAsc();
 
+    // List all teams
+    @Query(value = "SELECT * FROM Team", nativeQuery = true)
+    List<Team> findAllNative();
+
     // Custom JPA query
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
     List<Team> findByLikeTermNative(String term);
