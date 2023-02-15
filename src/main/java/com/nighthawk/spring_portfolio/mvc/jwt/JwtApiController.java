@@ -13,8 +13,11 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.JsonNode;
+import java.util.Base64;
 
-import com.nighthawk.spring_portfolio.mvc.user.User;
+import com.nighthawk.spring_portfolio.mvc.user.*;
 
 @RestController
 @CrossOrigin
@@ -29,21 +32,44 @@ public class JwtApiController {
 	@Autowired
 	private JwtUserDetailsService jwtUserDetailsService;
 
+	@Autowired
+	private UserJpaRepository userRepository;
+
 	@PostMapping("/authenticate")
-	public ResponseEntity<?> createAuthenticationToken(@RequestBody User authenticationRequest) throws Exception {
+	public ResponseEntity<MyResponse> createAuthenticationToken(@RequestBody User authenticationRequest)
+			throws Exception {
 		authenticate(authenticationRequest.getEmail(), authenticationRequest.getPassword());
 		final UserDetails userDetails = jwtUserDetailsService
 				.loadUserByUsername(authenticationRequest.getEmail());
 		final String token = jwtTokenUtil.generateToken(userDetails);
+		String[] jwtParts = token.split("\\.");
+
+		// Decode the base64-encoded header and payload
+		String payloadJson = new String(Base64.getUrlDecoder().decode(jwtParts[1]));
+
+		ObjectMapper objectMapper = new ObjectMapper();
+		JsonNode payload;
+		payload = objectMapper.readTree(payloadJson);
+		// Extract the value of a specific claim from the payload
+		String email = payload.get("sub").asText();
+
+		// find ID corresponding to email
+		User user = userRepository.findByEmail(email);
+		Long id = user.getId();
 		final ResponseCookie tokenCookie = ResponseCookie.from("jwt", token)
-			.httpOnly(true)
-			.secure(true)
-			.path("/")
-			.maxAge(3600)
-			// .domain("example.com") // Set to backend domain
-			.sameSite("None; Secure")
-			.build();
-		return ResponseEntity.ok().header(HttpHeaders.SET_COOKIE, tokenCookie.toString()).build();
+				.httpOnly(true)
+				.secure(true)
+				.path("/")
+				.maxAge(3600)
+				// .domain("example.com") // Set to backend domain
+				.sameSite("None; Secure")
+				.build();
+
+		MyResponse response = new MyResponse(id, tokenCookie);
+		// return with cookie in header and MyRespone object in body
+		return (ResponseEntity.ok()
+				.header(HttpHeaders.SET_COOKIE, tokenCookie.toString()))
+				.body(response);
 	}
 
 	private void authenticate(String username, String password) throws Exception {
