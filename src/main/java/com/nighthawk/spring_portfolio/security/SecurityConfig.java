@@ -85,6 +85,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/").permitAll()
                 .antMatchers("/api/user/makeBet").permitAll()
                 .antMatchers("/api/calendar/newCalendar").permitAll()
+                .antMatchers("/api/calendar/").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().cors().and()
