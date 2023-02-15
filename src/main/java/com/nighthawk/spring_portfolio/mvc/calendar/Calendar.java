@@ -33,7 +33,6 @@ public class Calendar {
 
     private String note;
 
-    @NotEmpty
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date dateOfEvent;
 
