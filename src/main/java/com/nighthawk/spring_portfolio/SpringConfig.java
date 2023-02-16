@@ -42,7 +42,7 @@ public class SpringConfig {
         Race race = raceRepository.findByDate(date);
 
         if (race == null) {
-            System.out.println("Checked for Race Results: Race Not Found");
+            System.out.println("Checked for Race Results: Race Not Found (test that runs periodically dw abt it)");
             return;
         }
 
@@ -81,7 +81,7 @@ public class SpringConfig {
         race.setRaceResultWinner(constructorID);
         raceRepository.save(race);
 
-        System.out.println("Checked for Race Results: Race Winner Updated");
+        System.out.println("Checked for Race Results: Race Winner Updated (test that runs periodically dw abt it)");
     }
 
 }

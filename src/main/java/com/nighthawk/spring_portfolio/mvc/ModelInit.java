@@ -101,7 +101,8 @@ public class ModelInit {
                         .method("GET", HttpRequest.BodyPublishers.noBody())
                         .build();
 
-                System.out.println("http://ergast.com/api/f1/" + year + "/" + roundNumber + "/results.json");
+                // System.out.println("http://ergast.com/api/f1/" + year + "/" + roundNumber +
+                // "/results.json");
                 // RapidAPI request and response
                 HttpResponse<String> response = HttpClient.newHttpClient().send(request,
                         HttpResponse.BodyHandlers.ofString());
