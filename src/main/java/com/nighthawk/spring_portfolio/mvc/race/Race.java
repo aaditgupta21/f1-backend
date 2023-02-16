@@ -33,10 +33,9 @@ public class Race {
     private String circuit;
 
     @NonNull
-    @DateTimeFormat(pattern = "MM-dd-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
-    @Positive
     private int round;
 
     @NotEmpty
@@ -47,12 +46,11 @@ public class Race {
 
     // TODO: fix this since idk how we want to handle results of a race
     // api should copy bets ig
-    @NotEmpty
     private String raceResultWinner;
 
-    @JoinColumn(name = "race_id")
-    @OneToMany(cascade = CascadeType.ALL)
-    private List<Bet> bets = new ArrayList<>();
+    // @JoinColumn(name = "race_id")
+    // @OneToMany(cascade = CascadeType.ALL)
+    // private List<Bet> bets = new ArrayList<>();
 
     public Race(String name, String circuit, Date date, int round, String location, String season) {
         this.name = name;
