@@ -93,6 +93,10 @@ public class ModelInit {
             String year = String.valueOf(race.getDate().getYear() + 1900);
             String roundNumber = String.valueOf(race.getRound() - 1);
 
+            if (race.getRound() == -1) {
+                return;
+            }
+
             try { // APIs can fail (ie Internet or Service down)
                   // RapidAPI header
                 HttpRequest request = HttpRequest.newBuilder()

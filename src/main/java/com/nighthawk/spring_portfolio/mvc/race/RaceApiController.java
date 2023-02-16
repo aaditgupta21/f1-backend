@@ -90,10 +90,10 @@ public class RaceApiController {
         String raceName = (String) map.get("raceName");
         String circuit = (String) map.get("circuit");
         String dateString = (String) map.get("date");
-        String roundString = (String) map.get("round");
         String location = (String) map.get("location");
         String season = (String) map.get("season");
 
+        int round = -1;
         Date date;
 
         try {
@@ -102,8 +102,6 @@ public class RaceApiController {
             return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
                     HttpStatus.BAD_REQUEST);
         }
-
-        int round = Integer.valueOf(roundString);
 
         Race race = new Race(raceName, circuit, date, round, location, season);
         raceRepository.save(race);
