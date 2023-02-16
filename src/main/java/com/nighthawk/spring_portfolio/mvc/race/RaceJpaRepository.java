@@ -17,6 +17,8 @@ Extends the JpaRepository interface from Spring Data JPA.
 public interface RaceJpaRepository extends JpaRepository<Race, Long> {
     Race findByDate(Date date);
 
+    Race findBySeason(String season);
+
     Race findByNameIgnoreCaseAndSeason(String name, String season);
 
     List<Race> findAllByOrderByIdAsc();

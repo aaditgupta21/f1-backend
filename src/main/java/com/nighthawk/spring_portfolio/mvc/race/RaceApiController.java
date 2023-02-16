@@ -216,4 +216,8 @@ public class RaceApiController {
                 HttpStatus.OK);
     }
 
+    @GetMapping("/{year}")
+    public ResponseEntity<Race> getRacesByYear(@PathVariable String year) {
+        return new ResponseEntity<>(raceRepository.findBySeason(year), HttpStatus.OK);
+    }
 }
