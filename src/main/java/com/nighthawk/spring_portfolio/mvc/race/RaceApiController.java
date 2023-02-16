@@ -74,6 +74,38 @@ public class RaceApiController {
         return new ResponseEntity<>(body, status);
     }
 
+    @GetMapping("/races/winner/{year}") // added to end of prefix as endpoint
+    public ResponseEntity<JSONObject> getRaceWinner(@PathVariable String year) {
+        // calls API once a day, sets body and status properties
+        try { // APIs can fail (ie Internet or Service down)
+
+            // RapidAPI header
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(
+                            "https://ergast.com/api/f1/" + year + "/results.json"))
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
+
+            // RapidAPI request and response
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request,
+                    HttpResponse.BodyHandlers.ofString());
+
+            // JSONParser extracts text body and parses to JSONObject
+            this.body = (JSONObject) new JSONParser().parse(response.body());
+            this.status = HttpStatus.OK; // 200 success
+        } catch (Exception e) { // capture failure info
+            HashMap<String, String> status = new HashMap<>();
+            status.put("status", "RapidApi failure: " + e);
+
+            // Setup object for error
+            this.body = (JSONObject) status;
+            this.status = HttpStatus.INTERNAL_SERVER_ERROR; // 500 error
+        }
+
+        // return JSONObject in RESTful style
+        return new ResponseEntity<>(body, status);
+    }
+
     /*
      * GET List of Races
      */
