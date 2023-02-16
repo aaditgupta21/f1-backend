@@ -82,4 +82,45 @@ public class RaceInit {
         }
     }
 
+    public void raceResults() throws Exception {
+        List<Race> races = repository.findAllByOrderByIdAsc();
+
+        for (Race race : races) {
+            JSONObject data;
+            String year = String.valueOf(race.getDate().getYear() + 1900);
+            String roundNumber = String.valueOf(race.getRound() - 1);
+
+            try { // APIs can fail (ie Internet or Service down)
+                  // RapidAPI header
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(
+                                "http://ergast.com/api/f1/" + year + "/" + roundNumber + "/results.json"))
+                        .method("GET", HttpRequest.BodyPublishers.noBody())
+                        .build();
+
+                System.out.println("http://ergast.com/api/f1/" + year + "/" + roundNumber + "/results.json");
+                // RapidAPI request and response
+                HttpResponse<String> response = HttpClient.newHttpClient().send(request,
+                        HttpResponse.BodyHandlers.ofString());
+
+                // JSONParser extracts text body and parses to JSONObject
+                data = (JSONObject) new JSONParser().parse(response.body());
+            } catch (Exception e) { // capture failure info
+                System.out.println(e);
+                return;
+            }
+
+            JSONObject mrData = (JSONObject) data.get("MRData");
+            JSONObject raceTable = (JSONObject) mrData.get("RaceTable");
+            JSONArray racesData = (JSONArray) raceTable.get("Races");
+            JSONObject raceIndex = (JSONObject) racesData.get(0);
+            JSONArray results = (JSONArray) raceIndex.get("Results");
+            JSONObject result = (JSONObject) results.get(0);
+            JSONObject constructor = (JSONObject) result.get("Constructor");
+            String constructorID = (String) constructor.get("constructorId");
+
+            race.setRaceResultWinner(constructorID);
+            repository.save(race);
+        }
+    }
 }

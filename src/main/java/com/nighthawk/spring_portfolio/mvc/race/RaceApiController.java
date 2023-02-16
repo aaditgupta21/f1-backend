@@ -8,11 +8,14 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -83,42 +86,108 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    @PostMapping("/raceResults")
-    public ResponseEntity<Object> raceResults(@RequestParam("date") String dateString) {
+    // creates new user
+    @PostMapping(value = "/customRace", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> newRace(@RequestBody final Map<String, Object> map) {
+
+        // Create DOB
+        String raceName = (String) map.get("raceName");
+        String circuit = (String) map.get("circuit");
+        String dateString = (String) map.get("date");
+        String roundString = (String) map.get("round");
+        String location = (String) map.get("location");
+        String season = (String) map.get("season");
+
         Date date;
 
         try {
-            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
         } catch (Exception e) {
-            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+            return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        int round = Integer.valueOf(roundString);
+
+        Race race = new Race(raceName, circuit, date, round, location, season);
+        raceRepository.save(race);
+
+        return new ResponseEntity<>(raceName + " successfully created",
+                HttpStatus.OK);
+    }
+
+    @PostMapping("/raceResults")
+    public ResponseEntity<Object> raceResults(@RequestParam("date") String dateString) throws Exception {
+        Date date;
+
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
                     HttpStatus.BAD_REQUEST);
         }
 
         Race race = raceRepository.findByDate(date);
-        String raceResultWinner = race.getRaceResultWinner();
 
-        if (race != null) {
+        if (race.equals(null)) {
             return new ResponseEntity<>("race does not exist",
                     HttpStatus.BAD_REQUEST);
         }
 
-        List<Bet> bets = race.getBets();
+        JSONObject data;
+        String year = String.valueOf(date.getYear() + 1900);
+        String roundNumber = String.valueOf(race.getRound() - 1);
 
-        for (Bet bet : bets) {
-            // TODO: need to pull from bets columns??
-            Team team = bet.getTeam();
-            if (raceResultWinner.equals(team.getName()) && bet.getBetActive()) {
-                User user = bet.getUser();
-                user.addF1Coin(2 * bet.getFCoinBet());
+        try { // APIs can fail (ie Internet or Service down)
+              // RapidAPI header
+            HttpRequest request = HttpRequest.newBuilder()
+                    .uri(URI.create(
+                            "http://ergast.com/api/f1/" + year + "/" + roundNumber + "/results.json"))
+                    .method("GET", HttpRequest.BodyPublishers.noBody())
+                    .build();
 
-                userRepository.save(user);
-            }
+            System.out.println("http://ergast.com/api/f1/" + year + "/" + roundNumber + "/results.json");
+            // RapidAPI request and response
+            HttpResponse<String> response = HttpClient.newHttpClient().send(request,
+                    HttpResponse.BodyHandlers.ofString());
 
-            bet.setBetActive(false);
-            betRepository.save(bet);
+            // JSONParser extracts text body and parses to JSONObject
+            data = (JSONObject) new JSONParser().parse(response.body());
+        } catch (Exception e) { // capture failure info
+            return new ResponseEntity<>("api failed",
+                    HttpStatus.BAD_REQUEST);
         }
 
-        return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+        JSONObject mrData = (JSONObject) data.get("MRData");
+        JSONObject raceTable = (JSONObject) mrData.get("RaceTable");
+        JSONArray racesData = (JSONArray) raceTable.get("Races");
+        JSONObject raceIndex = (JSONObject) racesData.get(0);
+        JSONArray results = (JSONArray) raceIndex.get("Results");
+        JSONObject result = (JSONObject) results.get(0);
+        JSONObject constructor = (JSONObject) result.get("Constructor");
+        String constructorID = (String) constructor.get("constructorId");
+
+        race.setRaceResultWinner(constructorID);
+        raceRepository.save(race);
+
+        return new ResponseEntity<>("race results updated", HttpStatus.OK);
+    }
+
+    // creates new user
+    @PostMapping(value = "/declareWinner", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> declareWinner(@RequestBody final Map<String, Object> map) {
+
+        // Create DOB
+        String raceName = (String) map.get("raceName");
+        String season = (String) map.get("season");
+        String winner = (String) map.get("winner");
+
+        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, season);
+        race.setRaceResultWinner(winner);
+        raceRepository.save(race);
+
+        return new ResponseEntity<>(winner + " declared for " + raceName + " " + season + " season!",
+                HttpStatus.OK);
     }
 
 }

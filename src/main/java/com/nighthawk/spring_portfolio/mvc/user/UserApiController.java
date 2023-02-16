@@ -18,8 +18,11 @@ import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.nighthawk.spring_portfolio.mvc.team.TeamJpaRepository;
 
 import java.util.*;
-
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 
 @RestController
 @RequestMapping("/api/user")
@@ -47,7 +50,6 @@ public class UserApiController {
     public ResponseEntity<List<User>> getUsers() {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
-
 
     // creates new user
     @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -107,6 +109,58 @@ public class UserApiController {
         }
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
+
+    @PostMapping("/updateUser")
+    public ResponseEntity<Object> updateUser(@RequestBody final Map<String, Object> map) {
+
+        // Create DOB
+        String dobString = (String) map.get("dob");
+        String teamName = (String) map.get("teamName");
+        String email = (String) map.get("email");
+        String password = (String) map.get("password");
+        String gender = (String) map.get("gender");
+        String name = (String) map.get("name");
+        Date dob;
+
+        try {
+            dob = new SimpleDateFormat("MM-dd-yyyy").parse(dobString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dobString + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        User user = userRepository.findByName(name);
+        Team team = teamRepository.findByName(teamName);
+
+        // TODO: handle team change
+
+        if (user != null && team != null) {
+            user.setDob(dob);
+            user.setEmail(email);
+            user.setPassword(password);
+            user.setGender(gender);
+            user.setName(name);
+
+            userRepository.save(user);
+
+            return new ResponseEntity<>(name + " user updated", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> deleteUser(@RequestBody final Map<String, Object> map) {
+        String name = (String) map.get("name");
+        User user = userRepository.findByName(name);
+
+        if (user != null) {
+            userRepository.delete(user);
+            return new ResponseEntity<>(name + " user deleted", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    }
+
     @PostMapping("/makeBet")
     public ResponseEntity<Object> makeBet(@RequestBody final Map<String, Object> map) {
         String raceName = (String) map.get("race");
@@ -114,25 +168,23 @@ public class UserApiController {
         String teamString = (String) map.get("team");
         String userString = (String) map.get("user");
         Double f1coins = (Double) map.get("f1coins");
-        String dateString = (String) map.get("date");
         Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
         Team team = teamRepository.findByName(teamString);
         User user = userRepository.findByName(userString);
 
-        Date date;
+        ZoneId defaultZoneId = ZoneId.systemDefault();
+        Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
 
-        try {
-            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
-        } catch (Exception e) {
-            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
-                    HttpStatus.BAD_REQUEST);
+        if (!date.before(race.getDate())) {
+            return new ResponseEntity<>("invalid, already past race deadline",
+                    HttpStatus.FORBIDDEN);
         }
 
         if (user != null && team != null & race != null) {
             Bet bet = new Bet(f1coins, date);
 
             // add bets to array list
-            race.getBets().add(bet);
+            bet.setRace(race);
             bet.setTeam(team);
             bet.setUser(user);
 
@@ -140,9 +192,10 @@ public class UserApiController {
 
             betRepository.save(bet);
             return new ResponseEntity<>(
-                    userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + "f1Coins.",
+                    userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + " f1Coins.",
                     HttpStatus.OK);
         }
+
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
 
@@ -151,12 +204,13 @@ public class UserApiController {
     @PostMapping
     public ResponseEntity<Object> processBet(@RequestBody final Map<String, Object> map) {
         String dateString = (String) map.get("date");
+
         Date date;
 
         try {
-            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateString);
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
         } catch (Exception e) {
-            return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy",
+            return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
                     HttpStatus.BAD_REQUEST);
         }
 
@@ -168,7 +222,7 @@ public class UserApiController {
                     HttpStatus.BAD_REQUEST);
         }
 
-        List<Bet> bets = race.getBets();
+        List<Bet> bets = betRepository.findAllByRace(race);
 
         for (Bet bet : bets) {
             // TODO: need to pull from bets columns??

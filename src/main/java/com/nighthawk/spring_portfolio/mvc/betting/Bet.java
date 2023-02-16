@@ -32,7 +32,7 @@ public class Bet {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @DateTimeFormat(pattern = "MM-dd-yyyy")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     private Date date;
 
     @PositiveOrZero
@@ -42,12 +42,16 @@ public class Bet {
     private boolean betActive;
 
     @JoinColumn(name = "user_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private User user;
 
     @JoinColumn(name = "team_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Team team;
+
+    @JoinColumn(name = "race_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Race race;
 
     public Bet(double fCoinBet, Date date) {
         this.fCoinBet = fCoinBet;

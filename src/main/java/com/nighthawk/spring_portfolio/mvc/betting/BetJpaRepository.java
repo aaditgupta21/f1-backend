@@ -4,6 +4,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import com.nighthawk.spring_portfolio.mvc.race.Race;
+
+import java.util.Date;
 import java.util.List;
 
 /*
@@ -15,6 +18,8 @@ Extends the JpaRepository interface from Spring Data JPA.
 
 public interface BetJpaRepository extends JpaRepository<Bet, Long> {
     List<Bet> findAllByOrderByIdAsc();
+
+    List<Bet> findAllByRace(Race race);
 
     // Custom JPA query
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
