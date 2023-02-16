@@ -51,6 +51,16 @@ public class UserApiController {
         return new ResponseEntity<>(userRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
     }
 
+    // get coin for a user get request with id as pathvariable
+    @GetMapping("/coins/{id}")
+    public ResponseEntity<Object> getCoin(@PathVariable("id") final Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null) {
+            return new ResponseEntity<>(user.getF1coin(), HttpStatus.OK);
+        }
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    }
+
     // creates new user
     @PostMapping(value = "/newUser", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newUser(@RequestBody final Map<String, Object> map) {
