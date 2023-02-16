@@ -23,9 +23,6 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
-import org.springframework.web.filter.CorsFilter;
 
 /*
 * To enable HTTP Security in Spring, extend the WebSecurityConfigurerAdapter.
@@ -82,14 +79,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/item/newItem").permitAll()
                 .antMatchers("/api/user/bets").permitAll()
                 .antMatchers("/api/team/setDriverLog").permitAll()
+                .antMatchers("/api/team/drivelogs").permitAll()
+                .antMatchers("/api/team/drivelog/delete/*").permitAll()
                 .antMatchers("/api/race/races/*").permitAll()
                 .antMatchers("/api/bets/").permitAll()
                 .antMatchers("/api/user/makeBet").permitAll()
                 .antMatchers("/api/race/raceResults").permitAll()
                 .antMatchers("/api/race/customRace").permitAll()
                 .antMatchers("/api/race/declareWinner").permitAll()
+                .antMatchers("/api/user/makeBet").permitAll()
+                .antMatchers("/api/calendar/newCalendar").permitAll()
+                .antMatchers("/api/calendar/").permitAll()
                 .antMatchers("/").permitAll()
-                // .antMatchers("/api/user/makeBet").permitAll()
 
                 // all other requests need to be authenticated
                 .anyRequest().authenticated().and().cors().and()

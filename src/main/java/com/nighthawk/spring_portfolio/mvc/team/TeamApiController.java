@@ -35,7 +35,7 @@ public class TeamApiController {
     // TODO: 500 error and idky
     @GetMapping("/")
     public ResponseEntity<List<Team>> getTeams() {
-        return new ResponseEntity<>(teamRepository.findAllByOrderByNameAsc(), HttpStatus.OK);
+        return new ResponseEntity<>(teamRepository.findAllNative(), HttpStatus.OK);
     }
 
     /*
@@ -78,8 +78,11 @@ public class TeamApiController {
         // find the person by ID
         String teamName = (String) map.get("teamName");
         String dateString = (String) map.get("date");
-        Double miles = (Double) map.get("miles");
-        Double time = (Double) map.get("time");
+        String miles = (String) map.get("miles");
+        double miles2 = Double.parseDouble(miles);
+        String time = (String) map.get("time");
+        double time2 = Double.parseDouble(time);
+        String raceName = (String) map.get("raceName");
         Team team = teamRepository.findByName(teamName);
         if (team != null) { // Good ID
             Date date;
@@ -89,16 +92,26 @@ public class TeamApiController {
                 return new ResponseEntity<>(dateString + " error; try MM-dd-yyyy", HttpStatus.BAD_REQUEST);
             }
 
-            DriveLog driverLog = new DriveLog(date, miles, time);
+            DriveLog driverLog = new DriveLog(date, miles2, time2, raceName);
             team.getDrivelogs().add(driverLog);
 
             teamRepository.save(team); // conclude by writing the stats updates
 
-            // return Person with update Stats
-            return new ResponseEntity<>(team, HttpStatus.OK);
+            return new ResponseEntity<>("DriveLog created successfully", HttpStatus.OK);
         }
         // return Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
+    }
+    @GetMapping("/drivelog/delete/{id}")
+    public ResponseEntity<DriveLog> deleteDriveLog(@PathVariable long id) {
+        Optional<DriveLog> optional = driverLogJpaRepository.findById(id);
+        if (optional.isPresent()) { // Good ID
+            DriveLog driverLog = optional.get(); // value from findByID
+            driverLogJpaRepository.deleteById(id); // value from findByID
+            return new ResponseEntity<>(driverLog, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+        }
+        // Bad ID
+        return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }
 }

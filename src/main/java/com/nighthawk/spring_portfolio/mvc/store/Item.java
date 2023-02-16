@@ -64,5 +64,6 @@ public class Item {
         engine.setPartType("Engine");
         engine.setDescription("John");
         engine.setCurrentCost(999);
+        engine.setEndDate(endDate);
     }
 }

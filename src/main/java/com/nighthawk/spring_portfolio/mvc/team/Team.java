@@ -13,7 +13,6 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Size;
 import java.util.List;
 
-import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.drivelog.DriveLog;
 import com.nighthawk.spring_portfolio.mvc.store.Item;
 import com.nighthawk.spring_portfolio.mvc.user.User;

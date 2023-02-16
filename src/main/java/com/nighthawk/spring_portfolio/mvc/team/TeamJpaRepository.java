@@ -1,10 +1,8 @@
 package com.nighthawk.spring_portfolio.mvc.team;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
-import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 
 import java.util.List;
 
@@ -21,6 +19,10 @@ public interface TeamJpaRepository extends JpaRepository<Team, Long> {
     // Team findByBet(Bet bet);
 
     List<Team> findAllByOrderByNameAsc();
+
+    // List all teams
+    @Query(value = "SELECT * FROM Team", nativeQuery = true)
+    List<Team> findAllNative();
 
     // Custom JPA query
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)

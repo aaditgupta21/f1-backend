@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.*;
 
 import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
-import com.nighthawk.spring_portfolio.mvc.role.RoleJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
@@ -29,9 +28,6 @@ import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 @RestController // annotation to create a RESTful web services
 @RequestMapping("/api/race") // prefix of API
 public class RaceApiController {
-
-    @Autowired
-    private RoleJpaRepository roleRepository;
 
     @Autowired
     private RaceJpaRepository raceRepository;
