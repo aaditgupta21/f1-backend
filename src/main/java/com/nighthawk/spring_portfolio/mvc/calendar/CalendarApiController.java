@@ -9,6 +9,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import java.util.*;
+
 
 @RestController // annotation to create a RESTful web services
 @RequestMapping("/api/calendar") // prefix of API
@@ -19,16 +21,17 @@ public class CalendarApiController {
 
     // GET schedule data
     @PostMapping(value = "/newCalendar", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newTeam(@RequestParam("event") String event,
-            @RequestParam("note") String note,
-            @RequestParam("dateOfEvent") String dateOfEvent) {
-                Date date;
-                try {
-                    date = new SimpleDateFormat("MM-dd-yyyy").parse(dateOfEvent);
-                } catch (Exception e) {
-                    return new ResponseEntity<>(dateOfEvent + " error; try MM-dd-yyyy",
-                            HttpStatus.BAD_REQUEST);
-                }
+    public ResponseEntity<Object> newTeam(@RequestBody final Map<String, Object> map) {
+        String event = (String) map.get("event");
+        String dateOfEvent = (String) map.get("dateOfEvent");
+        String note = (String) map.get("note");
+        Date date;
+        try {
+            date = new SimpleDateFormat("MM-dd-yyyy").parse(dateOfEvent);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateOfEvent + " error; try MM-dd-yyyy",
+                    HttpStatus.BAD_REQUEST);
+        }
         Calendar calendar2 = new Calendar(event, note, date);
         calendarJpaRepository.save(calendar2);
         return new ResponseEntity<>(event + " listed successfully!", HttpStatus.CREATED);
