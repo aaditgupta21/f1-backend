@@ -166,18 +166,23 @@ public class UserApiController {
         String raceName = (String) map.get("race");
         String raceYear = (String) map.get("raceSeason");
         String teamString = (String) map.get("team");
-        String userString = (String) map.get("user");
+        Long userID = (Long) map.get("user");
         Double f1coins = (Double) map.get("f1coins");
+
         Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
         Team team = teamRepository.findByName(teamString);
-        User user = userRepository.findByName(userString);
+        User user = userRepository.findById(userID).orElse(null);
 
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
 
         if (!date.before(race.getDate())) {
             return new ResponseEntity<>("invalid, already past race deadline",
-                    HttpStatus.FORBIDDEN);
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        if (f1coins > user.getF1coin()) {
+            return new ResponseEntity<>("not enough f1 coins!", HttpStatus.BAD_REQUEST);
         }
 
         if (user != null && team != null & race != null) {
@@ -192,7 +197,8 @@ public class UserApiController {
 
             betRepository.save(bet);
             return new ResponseEntity<>(
-                    userString + " has made a bet for " + teamString + " for " + String.valueOf(f1coins) + " f1Coins.",
+                    "Bet for " + teamString + " of " + String.valueOf(f1coins)
+                            + " f1Coins.",
                     HttpStatus.OK);
         }
 
