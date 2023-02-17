@@ -212,7 +212,7 @@ public class RaceApiController {
         race.setRaceResultWinner(winner);
         raceRepository.save(race);
 
-        return new ResponseEntity<>(winner + " declared for " + raceName + " " + season + " season!",
+        return new ResponseEntity<>(winner + " declared as the winner for " + raceName + " " + season + " season!",
                 HttpStatus.OK);
     }
 
