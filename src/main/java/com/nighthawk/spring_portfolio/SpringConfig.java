@@ -7,6 +7,7 @@ import java.net.http.HttpResponse;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
@@ -17,8 +18,13 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
+import com.nighthawk.spring_portfolio.mvc.betting.Bet;
+import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.race.Race;
 import com.nighthawk.spring_portfolio.mvc.race.RaceJpaRepository;
+import com.nighthawk.spring_portfolio.mvc.team.Team;
+import com.nighthawk.spring_portfolio.mvc.user.User;
+import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 
 @Configuration
 @EnableScheduling
@@ -34,8 +40,14 @@ public class SpringConfig {
     @Autowired
     private RaceJpaRepository raceRepository;
 
+    @Autowired
+    private BetJpaRepository betRepository;
+
+    @Autowired
+    private UserJpaRepository userRepository;
+
     @Scheduled(fixedRate = 60000)
-    public void raceResults() throws Exception {
+    public void periodic() throws Exception {
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
 
@@ -46,6 +58,13 @@ public class SpringConfig {
             return;
         }
 
+        raceResults(date, race);
+        processBets(race);
+
+        System.out.println("Checked for Race Results: Updated Races And Bets (test that runs periodically dw abt it)");
+    }
+
+    public void raceResults(Date date, Race race) throws Exception {
         JSONObject data;
         String year = String.valueOf(date.getYear() + 1900);
         String roundNumber = String.valueOf(race.getRound() - 1);
@@ -80,8 +99,25 @@ public class SpringConfig {
 
         race.setRaceResultWinner(constructorID);
         raceRepository.save(race);
-
-        System.out.println("Checked for Race Results: Race Winner Updated (test that runs periodically dw abt it)");
     }
 
+    public void processBets(Race race) {
+        String raceResultWinner = race.getRaceResultWinner();
+
+        List<Bet> bets = betRepository.findAllByRace(race);
+
+        for (Bet bet : bets) {
+            // TODO: need to pull from bets columns??
+            Team team = bet.getTeam();
+            if (raceResultWinner.equals(team.getName()) && bet.getBetActive()) {
+                User user = bet.getUser();
+                user.addF1Coin(2 * bet.getFCoinBet());
+
+                userRepository.save(user);
+            }
+
+            bet.setBetActive(false);
+            betRepository.save(bet);
+        }
+    }
 }

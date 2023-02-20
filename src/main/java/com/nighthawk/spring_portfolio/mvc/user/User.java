@@ -20,6 +20,7 @@ import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Positive;
+import javax.validation.constraints.PositiveOrZero;
 import javax.validation.constraints.Size;
 import java.util.GregorianCalendar;
 import java.util.List;
@@ -77,7 +78,7 @@ public class User {
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date dob;
 
-    @Positive
+    @PositiveOrZero
     private double f1coin;
 
     @ManyToMany(fetch = FetchType.EAGER)

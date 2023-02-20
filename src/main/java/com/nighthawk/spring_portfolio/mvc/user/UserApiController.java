@@ -18,6 +18,9 @@ import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.nighthawk.spring_portfolio.mvc.team.TeamJpaRepository;
 
 import java.util.*;
+
+import javax.transaction.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
@@ -171,15 +174,19 @@ public class UserApiController {
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
+    @Transactional
     @PostMapping("/makeBet")
     public ResponseEntity<Object> makeBet(@RequestBody final Map<String, Object> map) {
         String raceName = (String) map.get("race");
         String raceYear = (String) map.get("raceSeason");
         String teamString = (String) map.get("team");
         String userIDString = (String) map.get("user");
-        Double f1coins = (Double) map.get("f1coins");
+        String f1coins = (String) (map.get("f1coins"));
+
+        Boolean overwrite = (Boolean) (map.get("overwrite"));
 
         Long userID = Long.parseLong(userIDString);
+        double f1coinValue = Double.valueOf(f1coins);
 
         Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
         Team team = teamRepository.findByName(teamString);
@@ -189,23 +196,24 @@ public class UserApiController {
             ZoneId defaultZoneId = ZoneId.systemDefault();
             Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
 
-            if (!date.before(race.getDate())) {
+            if (overwrite) {
+            } else if (!date.before(race.getDate())) {
                 return new ResponseEntity<>("invalid, already past race deadline",
                         HttpStatus.BAD_REQUEST);
             }
 
-            if (f1coins > user.getF1coin()) {
+            if (f1coinValue > user.getF1coin()) {
                 return new ResponseEntity<>("not enough f1 coins!", HttpStatus.BAD_REQUEST);
             }
 
-            Bet bet = new Bet(f1coins, date);
+            Bet bet = new Bet(f1coinValue, date);
 
             // add bets to array list
             bet.setRace(race);
             bet.setTeam(team);
             bet.setUser(user);
 
-            user.addF1Coin(-1 * f1coins);
+            user.addF1Coin(-1 * f1coinValue);
 
             betRepository.save(bet);
             userRepository.save(user);
@@ -218,10 +226,8 @@ public class UserApiController {
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
 
-    // TODO: need to make periodic checks on race dates to get bets in
-    // make this a check for teams as well???
-    @PostMapping
-    public ResponseEntity<Object> processBet(@RequestBody final Map<String, Object> map) {
+    @PostMapping("/processBets")
+    public ResponseEntity<Object> processBets(@RequestBody final Map<String, Object> map) {
         String dateString = (String) map.get("date");
 
         Date date;
@@ -234,12 +240,13 @@ public class UserApiController {
         }
 
         Race race = raceRepository.findByDate(date);
-        String raceResultWinner = race.getRaceResultWinner();
 
-        if (race != null) {
+        if (race == null) {
             return new ResponseEntity<>("race does not exist",
                     HttpStatus.BAD_REQUEST);
         }
+
+        String raceResultWinner = race.getRaceResultWinner();
 
         List<Bet> bets = betRepository.findAllByRace(race);
 

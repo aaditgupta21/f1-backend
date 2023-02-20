@@ -90,6 +90,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/race/declareWinner").permitAll()
                 .antMatchers("/api/race/*").permitAll()
                 .antMatchers("/api/user/makeBet").permitAll()
+                .antMatchers("/api/user/processBets").permitAll()
                 .antMatchers("/api/calendar/newCalendar").permitAll()
                 .antMatchers("/api/calendar/").permitAll()
                 .antMatchers("/api/user/coins/*").permitAll()
