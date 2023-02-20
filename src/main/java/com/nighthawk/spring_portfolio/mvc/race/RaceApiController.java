@@ -110,7 +110,7 @@ public class RaceApiController {
      * GET List of Races
      */
     @GetMapping("/")
-    public ResponseEntity<List<Race>> getTeams() {
+    public ResponseEntity<List<Race>> getRaces() {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 

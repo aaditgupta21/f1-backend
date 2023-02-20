@@ -176,26 +176,28 @@ public class UserApiController {
         String raceName = (String) map.get("race");
         String raceYear = (String) map.get("raceSeason");
         String teamString = (String) map.get("team");
-        Long userID = (Long) map.get("user");
+        String userIDString = (String) map.get("user");
         Double f1coins = (Double) map.get("f1coins");
+
+        Long userID = Long.parseLong(userIDString);
 
         Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
         Team team = teamRepository.findByName(teamString);
         User user = userRepository.findById(userID).orElse(null);
 
-        ZoneId defaultZoneId = ZoneId.systemDefault();
-        Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
-
-        if (!date.before(race.getDate())) {
-            return new ResponseEntity<>("invalid, already past race deadline",
-                    HttpStatus.BAD_REQUEST);
-        }
-
-        if (f1coins > user.getF1coin()) {
-            return new ResponseEntity<>("not enough f1 coins!", HttpStatus.BAD_REQUEST);
-        }
-
         if (user != null && team != null & race != null) {
+            ZoneId defaultZoneId = ZoneId.systemDefault();
+            Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
+
+            if (!date.before(race.getDate())) {
+                return new ResponseEntity<>("invalid, already past race deadline",
+                        HttpStatus.BAD_REQUEST);
+            }
+
+            if (f1coins > user.getF1coin()) {
+                return new ResponseEntity<>("not enough f1 coins!", HttpStatus.BAD_REQUEST);
+            }
+
             Bet bet = new Bet(f1coins, date);
 
             // add bets to array list
@@ -206,6 +208,7 @@ public class UserApiController {
             user.addF1Coin(-1 * f1coins);
 
             betRepository.save(bet);
+            userRepository.save(user);
             return new ResponseEntity<>(
                     "Bet for " + teamString + " of " + String.valueOf(f1coins)
                             + " f1Coins.",
