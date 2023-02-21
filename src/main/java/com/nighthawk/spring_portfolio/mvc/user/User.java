@@ -87,7 +87,7 @@ public class User {
     private Collection<Role> roles = new ArrayList<>();
 
     @JoinColumn(name = "user_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne(cascade = CascadeType.MERGE)
     private Team team;
 
     // A custom getter to return age from dob attribute
