@@ -41,9 +41,15 @@ public class TeamApiController {
     /*
      * GET List of Teams
      */
-    @GetMapping("/drivelogs")
-    public ResponseEntity<List<DriveLog>> getDriveLogs() {
-        return new ResponseEntity<>(driverLogJpaRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
+    @GetMapping("/drivelogs/{id}")
+    public ResponseEntity<List<DriveLog>> getDriveLogs(@PathVariable long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if (user != null && user.getTeam() != null) {
+            return new ResponseEntity<>(driverLogJpaRepository.findByTeamId(user.getTeam().getId()), HttpStatus.OK);
+        } else {
+            // Return an error response if the user or team is null
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
     }
 
     // TODO: needs security access since we only want admins to create a new team

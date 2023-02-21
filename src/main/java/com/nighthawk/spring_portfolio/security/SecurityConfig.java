@@ -79,7 +79,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/item/newItem").permitAll()
                 .antMatchers("/api/user/bets").permitAll()
                 .antMatchers("/api/team/setDriverLog").permitAll()
-                .antMatchers("/api/team/drivelogs").permitAll()
+                .antMatchers("/api/team/drivelogs/*").permitAll()
                 .antMatchers("/api/team/drivelog/delete/*").permitAll()
                 .antMatchers("/api/race/races/*").permitAll()
                 .antMatchers("/api/race/races/winner/*").permitAll()
