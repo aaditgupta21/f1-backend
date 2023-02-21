@@ -16,6 +16,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToMany;
+import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
@@ -30,6 +31,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.role.Role;
+import com.nighthawk.spring_portfolio.mvc.team.Team;
 import com.vladmihalcea.hibernate.type.json.JsonType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -84,9 +86,9 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    // @JoinColumn(name = "user_id")
-    // @OneToMany(cascade = CascadeType.ALL)
-    // private List<Bet> bets = new ArrayList<>();
+    @JoinColumn(name = "user_id")
+    @ManyToOne(cascade = CascadeType.ALL)
+    private Team team;
 
     // A custom getter to return age from dob attribute
     public int getAge() {

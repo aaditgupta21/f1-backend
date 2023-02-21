@@ -51,8 +51,9 @@ public class Team {
     private String location;
 
     // one team has many users (relationship)
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<User> users = new ArrayList<>();
+    // @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval
+    // = true)
+    // private List<User> users = new ArrayList<>();
 
     @JoinColumn(name = "team_id")
     @OneToMany(cascade = CascadeType.ALL)

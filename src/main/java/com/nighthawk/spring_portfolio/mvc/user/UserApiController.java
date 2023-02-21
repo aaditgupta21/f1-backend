@@ -97,7 +97,7 @@ public class UserApiController {
             password = BCrypt.hashpw(password, BCrypt.gensalt());
             User user = new User(email, password, gender, name, dob, roleStudent, 100.0);
 
-            team.getUsers().add(user);
+            user.setTeam(team);
             teamRepository.save(team); // conclude by writing the user updates
 
             // return email (or return w message of successfully created user)
