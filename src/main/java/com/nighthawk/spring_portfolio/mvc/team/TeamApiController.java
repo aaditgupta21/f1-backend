@@ -82,14 +82,16 @@ public class TeamApiController {
     public ResponseEntity<Object> driverLog(@RequestBody final Map<String, Object> map) {
 
         // find the person by ID
-        String teamName = (String) map.get("teamName");
         String dateString = (String) map.get("date");
         String miles = (String) map.get("miles");
         double miles2 = Double.parseDouble(miles);
         String time = (String) map.get("time");
         double time2 = Double.parseDouble(time);
+        String userIDString = (String) map.get("user");
+        Long userID = Long.parseLong(userIDString);
         String raceName = (String) map.get("raceName");
-        Team team = teamRepository.findByName(teamName);
+        User user = userRepository.findById(userID).orElse(null);
+        Team team = user.getTeam();
         if (team != null) { // Good ID
             Date date;
             try {
