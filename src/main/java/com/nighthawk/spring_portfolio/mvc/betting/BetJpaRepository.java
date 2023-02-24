@@ -1,13 +1,11 @@
 package com.nighthawk.spring_portfolio.mvc.betting;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import com.nighthawk.spring_portfolio.mvc.race.Race;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 
-import java.util.Date;
 import java.util.List;
 
 /*

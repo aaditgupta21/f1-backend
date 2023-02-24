@@ -100,7 +100,7 @@ public class UserApiController {
 
             user.setTeam(team);
             teamRepository.save(team); // conclude by writing the user updates
-
+            userRepository.save(user);
             // return email (or return w message of successfully created user)
             return new ResponseEntity<>(email + " user created successfully", HttpStatus.OK);
         } else {
