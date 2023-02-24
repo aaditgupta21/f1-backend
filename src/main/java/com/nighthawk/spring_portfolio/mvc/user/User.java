@@ -86,7 +86,7 @@ public class User {
     @ManyToMany(fetch = FetchType.EAGER)
     private Collection<Role> roles = new ArrayList<>();
 
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "team_id")
     @ManyToOne(cascade = CascadeType.MERGE)
     private Team team;
 

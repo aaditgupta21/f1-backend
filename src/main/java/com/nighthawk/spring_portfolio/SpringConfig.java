@@ -45,7 +45,7 @@ public class SpringConfig {
     @Autowired
     private UserJpaRepository userRepository;
 
-    @Scheduled(fixedRate = 60000)
+    @Scheduled(fixedRate = 1200000)
     public void periodic() throws Exception {
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
