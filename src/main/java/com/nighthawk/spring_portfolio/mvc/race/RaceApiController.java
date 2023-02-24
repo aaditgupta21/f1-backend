@@ -220,4 +220,18 @@ public class RaceApiController {
     public ResponseEntity<Race> getRacesByYear(@PathVariable String year) {
         return new ResponseEntity<>(raceRepository.findBySeason(year), HttpStatus.OK);
     }
+
+    @GetMapping("/raceByDate")
+    public ResponseEntity<Object> getRacesByDate(@RequestBody final Map<String, Object> map) {
+        String dateString = (String) map.get("date");
+        Date date;
+        try {
+            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
+        } catch (Exception e) {
+            return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
+                    HttpStatus.BAD_REQUEST);
+        }
+
+        return new ResponseEntity<>(raceRepository.findByDate(date), HttpStatus.OK);
+    }
 }
