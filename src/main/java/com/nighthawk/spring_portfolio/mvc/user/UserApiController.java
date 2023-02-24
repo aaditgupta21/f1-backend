@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
@@ -184,6 +185,9 @@ public class UserApiController {
         String f1coins = (String) (map.get("f1coins"));
 
         Boolean overwrite = (Boolean) (map.get("overwrite"));
+        if (overwrite == null) {
+            overwrite = false;
+        }
 
         Long userID = Long.parseLong(userIDString);
         double f1coinValue = Double.valueOf(f1coins);
@@ -265,5 +269,61 @@ public class UserApiController {
         }
 
         return new ResponseEntity<>("all bets updated", HttpStatus.OK);
+    }
+
+    @GetMapping("/getBets/{id}")
+    public ResponseEntity<Object> getBets(@PathVariable String idString) {
+        Long id = Long.valueOf(idString);
+        List<Bet> bets = betRepository.findAllById(id);
+
+        return new ResponseEntity<>(bets, HttpStatus.OK);
+    }
+
+    @PostMapping("/updateBet")
+    public ResponseEntity<Object> updateBet(@RequestBody final Map<String, Object> map) {
+        String raceName = (String) map.get("race");
+        String raceYear = (String) map.get("raceSeason");
+        String teamString = (String) map.get("team");
+        String userIDString = (String) map.get("user");
+        String f1coins = (String) (map.get("f1coins"));
+
+        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
+        User user = userRepository.findById(Long.valueOf(userIDString)).orElse(null);
+        Team team = teamRepository.findByName(teamString);
+
+        if (race != null && user != null && team != null) {
+            Bet bet = betRepository.findByRaceAndUserAndBetActive(race, user, true);
+            if (bet != null) {
+                bet.setFCoinBet(Double.valueOf(f1coins));
+                bet.setTeam(team);
+                betRepository.save(bet);
+
+                return new ResponseEntity<>("Successfully changed bet", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("bet could not be found", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("wrong user, race, or team; could not update", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @DeleteMapping("/deleteBet")
+    public ResponseEntity<Object> deleteBet(@RequestBody final Map<String, Object> map) {
+        String raceName = (String) map.get("race");
+        String raceYear = (String) map.get("raceSeason");
+        String userIDString = (String) map.get("user");
+
+        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
+        User user = userRepository.findById(Long.valueOf(userIDString)).orElse(null);
+
+        if (race != null || user != null) {
+            Bet bet = betRepository.findByRaceAndUserAndBetActive(race, user, true);
+            if (bet != null) {
+                betRepository.delete(bet);
+                return new ResponseEntity<>("Successfully changed bet", HttpStatus.OK);
+            }
+            return new ResponseEntity<>("bet could not be found", HttpStatus.BAD_REQUEST);
+        } else {
+            return new ResponseEntity<>("wrong user or race; could not delete", HttpStatus.BAD_REQUEST);
+        }
     }
 }
