@@ -34,7 +34,7 @@ public class RaceApiController {
     @Autowired
     private UserJpaRepository userRepository;
     @Autowired
-    private CommentJpaRepository commentRepository;
+    private CommentJpaRepository newCommentRepository;
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
@@ -79,7 +79,7 @@ public class RaceApiController {
     @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
         Comment newComment = new Comment(comment);
-        CommentJpaRepository.save(comment);
+        newCommentRepository.save(newComment);
         return new ResponseEntity<>(comment + " listed successfully!", HttpStatus.CREATED);
     }
 
