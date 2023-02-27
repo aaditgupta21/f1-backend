@@ -29,4 +29,18 @@ public class Comment {
         this.season = season;
         this.user = user;
     }
+
+    // @JoinColumn(name = "race_id")
+    // @ManyToOne(cascade = CascadeType.MERGE)
+    // private Race race;
+
+    // // public Comment(String comment, User user, Race race) {
+    // //     this.comment = comment;
+    // //     this.user = user;
+    // //     this.race = race;
+    // // }
+
+    // public Comment(String comment) {
+    //     this.comment = comment;
+    // }
 }
