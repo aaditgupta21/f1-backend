@@ -32,14 +32,16 @@ public class RaceApiController {
     @Autowired
     private RaceJpaRepository raceRepository;
 
-    @Autowired
-    private BetJpaRepository betRepository;
-
-    @Autowired
-    private UserJpaRepository userRepository;
-
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
+
+    /*
+     * GET List of Races
+     */
+    @GetMapping("/")
+    public ResponseEntity<List<Race>> getRaces() {
+        return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
+    }
 
     // GET schedule data
     @GetMapping("/races/{year}") // added to end of prefix as endpoint
@@ -110,7 +112,7 @@ public class RaceApiController {
      * GET List of Races
      */
     @GetMapping("/")
-    public ResponseEntity<List<Race>> getRaces() {
+    public ResponseEntity<List<Race>> getTeams() {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
