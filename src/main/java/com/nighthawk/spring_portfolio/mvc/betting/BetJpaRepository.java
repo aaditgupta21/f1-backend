@@ -22,6 +22,8 @@ public interface BetJpaRepository extends JpaRepository<Bet, Long> {
 
     List<Bet> findAllById(Long id);
 
+    List<Bet> findAllByUser(User user);
+
     Bet findByRaceAndUserAndBetActive(Race race, User user, Boolean betActive);
 
     // Custom JPA query

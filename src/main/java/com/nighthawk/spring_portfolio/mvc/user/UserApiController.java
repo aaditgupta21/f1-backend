@@ -278,8 +278,10 @@ public class UserApiController {
 
     @GetMapping("/getBets/{idString}") // fix
     public ResponseEntity<?> getBets(@PathVariable String idString) {
-        Long id = Long.valueOf(idString);
-        List<Bet> bets = betRepository.findAllById(id);
+        Long userId = Long.valueOf(idString);
+        User user = userRepository.findById(userId).orElse(null);
+
+        List<Bet> bets = betRepository.findAllByUser(user);
 
         List<JSONObject> entities = new ArrayList<JSONObject>();
         for (Bet bet : bets) {
