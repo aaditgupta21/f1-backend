@@ -276,10 +276,8 @@ public class UserApiController {
         return new ResponseEntity<>("all bets updated", HttpStatus.OK);
     }
 
-    @GetMapping("/getBets") // fix
-    public ResponseEntity<?> getBets(@RequestBody final Map<String, Object> map) {
-        String idString = (String) map.get("user");
-
+    @GetMapping("/getBets/{idString}") // fix
+    public ResponseEntity<?> getBets(@PathVariable String idString) {
         Long id = Long.valueOf(idString);
         List<Bet> bets = betRepository.findAllById(id);
 
@@ -300,49 +298,53 @@ public class UserApiController {
 
     @PostMapping("/updateBet")
     public ResponseEntity<Object> updateBet(@RequestBody final Map<String, Object> map) {
-        String raceName = (String) map.get("race");
-        String raceYear = (String) map.get("raceSeason");
+        String betIdString = (String) map.get("betId");
+        Long betId = Long.parseLong(betIdString);
+
         String teamString = (String) map.get("team");
-        String userIDString = (String) map.get("user");
         String f1coins = (String) (map.get("f1coins"));
 
-        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
-        User user = userRepository.findById(Long.valueOf(userIDString)).orElse(null);
         Team team = teamRepository.findByName(teamString);
 
-        if (race != null && user != null && team != null) {
-            Bet bet = betRepository.findByRaceAndUserAndBetActive(race, user, true);
-            if (bet != null) {
-                bet.setFCoinBet(Double.valueOf(f1coins));
-                bet.setTeam(team);
-                betRepository.save(bet);
-
-                return new ResponseEntity<>("Successfully changed bet", HttpStatus.OK);
-            }
-            return new ResponseEntity<>("bet could not be found", HttpStatus.BAD_REQUEST);
-        } else {
-            return new ResponseEntity<>("wrong user, race, or team; could not update", HttpStatus.BAD_REQUEST);
+        if (team == null) {
+            return new ResponseEntity<>("team could not be found", HttpStatus.BAD_REQUEST);
         }
+
+        Bet bet = betRepository.findById(betId).orElse(null);
+        if (bet != null && bet.getBetActive() == true) {
+            User user = bet.getUser();
+            user.addF1Coin(bet.getFCoinBet());
+
+            if (Double.valueOf(f1coins) > user.getF1coin()) {
+                return new ResponseEntity<>("not enough f1Coins", HttpStatus.BAD_REQUEST);
+            }
+
+            user.addF1Coin(-Double.valueOf(f1coins));
+            userRepository.save(user);
+
+            bet.setFCoinBet(Double.valueOf(f1coins));
+            if (!bet.getTeam().getId().equals(team.getId())) {
+                bet.setTeam(team);
+            }
+            betRepository.save(bet);
+
+            return new ResponseEntity<>("Successfully changed bet", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("bet could not be found/not active", HttpStatus.BAD_REQUEST);
     }
 
     @DeleteMapping("/deleteBet")
     public ResponseEntity<Object> deleteBet(@RequestBody final Map<String, Object> map) {
-        String raceName = (String) map.get("race");
-        String raceYear = (String) map.get("raceSeason");
-        String userIDString = (String) map.get("user");
+        String betIdString = (String) map.get("betId");
+        Long betId = Long.parseLong(betIdString);
 
-        Race race = raceRepository.findByNameIgnoreCaseAndSeason(raceName, raceYear);
-        User user = userRepository.findById(Long.valueOf(userIDString)).orElse(null);
-
-        if (race != null || user != null) {
-            Bet bet = betRepository.findByRaceAndUserAndBetActive(race, user, true);
-            if (bet != null) {
-                betRepository.delete(bet);
-                return new ResponseEntity<>("Successfully changed bet", HttpStatus.OK);
-            }
-            return new ResponseEntity<>("bet could not be found", HttpStatus.BAD_REQUEST);
+        Bet bet = betRepository.findById(betId).orElse(null);
+        if (bet != null) {
+            betRepository.delete(bet);
+            return new ResponseEntity<>("successfully deleted bet", HttpStatus.OK);
         } else {
-            return new ResponseEntity<>("wrong user or race; could not delete", HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>("bet not found", HttpStatus.BAD_REQUEST);
         }
     }
 }
