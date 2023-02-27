@@ -108,14 +108,6 @@ public class RaceApiController {
         return new ResponseEntity<>(body, status);
     }
 
-    /*
-     * GET List of Races
-     */
-    @GetMapping("/")
-    public ResponseEntity<List<Race>> getTeams() {
-        return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
-    }
-
     // creates new user
     @PostMapping(value = "/customRace", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newRace(@RequestBody final Map<String, Object> map) {
