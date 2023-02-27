@@ -76,6 +76,13 @@ public class RaceApiController {
         return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
     }
 
+    // @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
+    // public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
+    //     Comment newComment = new Comment(comment);
+    //     CommentJpaRepository.save(comment);
+    //     return new ResponseEntity<>(comment + " listed successfully!", HttpStatus.CREATED);
+    // }
+
     // GET schedule data
     @GetMapping("/races/{year}") // added to end of prefix as endpoint
     public ResponseEntity<JSONObject> getRaces(@PathVariable String year) {
