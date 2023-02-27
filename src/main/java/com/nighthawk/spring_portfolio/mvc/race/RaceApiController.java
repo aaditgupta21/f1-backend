@@ -34,7 +34,7 @@ public class RaceApiController {
     @Autowired
     private UserJpaRepository userRepository;
     @Autowired
-    private CommentJpaRepository newCommentRepository;
+    private CommentJpaRepository commentRepository;
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
@@ -47,46 +47,39 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    // @GetMapping("/getComments")
-    // public ResponseEntity<Object> getComments(@RequestBody final Map<String, Object> map) {
-    //     String userId = (String) map.get("user");
+    @GetMapping("/getCommentsByUser")
+    public ResponseEntity<Object> getCommentsByUser(@RequestBody final Map<String, Object> map) {
+        String userId = (String) map.get("user");
 
-    //     Long id = Long.parseLong(userId);
-    //     User user = userRepository.findById(id).orElse(null);
+        Long id = Long.parseLong(userId);
+        User user = userRepository.findById(id).orElse(null);
 
-    //     return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
-    // }
-
-    // @PostMapping("/makeComment")
-    // public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
-    //     String userId = (String) map.get("user");
-    //     String season = (String) map.get("season");
-    //     String comment = (String) map.get("comment");
-
-    //     Long id = Long.parseLong(userId);
-    //     User user = userRepository.findById(id).orElse(null);
-
-    //     if (user == null) {
-    //         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
-    //     }
-
-    //     Comment commentObj = new Comment(comment);
-    //     commentRepository.save(commentObj);
-
-    //     return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
-    // }
-
-    
-    @GetMapping("/getComments")
-    public ResponseEntity<List<Comment>> getComments() {
-        return new ResponseEntity<>(newCommentRepository.findAllByComment(), HttpStatus.OK);
+        return new ResponseEntity<>(commentRepository.findAllByUser(user),
+                HttpStatus.OK);
     }
 
-    @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
-        Comment newComment = new Comment(comment);
-        newCommentRepository.save(newComment);
-        return new ResponseEntity<>(comment + " listed successfully!", HttpStatus.CREATED);
+    @PostMapping("/makeComment")
+    public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
+        String userId = (String) map.get("user");
+        String season = (String) map.get("season");
+        String comment = (String) map.get("comment");
+
+        Long id = Long.parseLong(userId);
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Comment commentObj = new Comment(comment, season, user);
+        commentRepository.save(commentObj);
+
+        return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
+    }
+
+    @GetMapping("/getComments")
+    public ResponseEntity<List<Comment>> getComments() {
+        return new ResponseEntity<>(commentRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
     // GET schedule data

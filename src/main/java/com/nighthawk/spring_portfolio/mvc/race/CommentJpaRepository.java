@@ -16,12 +16,8 @@ Extends the JpaRepository interface from Spring Data JPA.
 -- Via JPA the developer can retrieve database from relational databases to Java objects and vice versa.
  */
 
- public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
-    // List <Comment> findAllByUser(User user);
-    // List <Comment> findAllByComment(Comment comment);
+public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
+    List<Comment> findAllByUser(User user);
 
-    List <Comment> findAllByComment();
-
-    static void save(String comment) {
-    }
+    List<Comment> findAllByOrderByIdAsc();
 }
