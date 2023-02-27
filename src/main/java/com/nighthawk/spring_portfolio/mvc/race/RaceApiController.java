@@ -50,10 +50,30 @@ public class RaceApiController {
     @GetMapping("/getComments")
     public ResponseEntity<Object> getComments(@RequestBody final Map<String, Object> map) {
         String userId = (String) map.get("user");
+
         Long id = Long.parseLong(userId);
         User user = userRepository.findById(id).orElse(null);
 
         return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
+    }
+
+    @PostMapping("/makeComment")
+    public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
+        String userId = (String) map.get("user");
+        String season = (String) map.get("season");
+        String comment = (String) map.get("comment");
+
+        Long id = Long.parseLong(userId);
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null) {
+            return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+        }
+
+        Comment commentObj = new Comment(comment, season, user);
+        commentRepository.save(commentObj);
+
+        return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
     }
 
     // GET schedule data
