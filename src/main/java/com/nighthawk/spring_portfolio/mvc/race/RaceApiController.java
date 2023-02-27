@@ -57,24 +57,24 @@ public class RaceApiController {
     //     return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
     // }
 
-    @PostMapping("/makeComment")
-    public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
-        String userId = (String) map.get("user");
-        String season = (String) map.get("season");
-        String comment = (String) map.get("comment");
+    // @PostMapping("/makeComment")
+    // public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
+    //     String userId = (String) map.get("user");
+    //     String season = (String) map.get("season");
+    //     String comment = (String) map.get("comment");
 
-        Long id = Long.parseLong(userId);
-        User user = userRepository.findById(id).orElse(null);
+    //     Long id = Long.parseLong(userId);
+    //     User user = userRepository.findById(id).orElse(null);
 
-        if (user == null) {
-            return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
-        }
+    //     if (user == null) {
+    //         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
+    //     }
 
-        Comment commentObj = new Comment(comment);
-        commentRepository.save(commentObj);
+    //     Comment commentObj = new Comment(comment);
+    //     commentRepository.save(commentObj);
 
-        return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
+    // }
 
     @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
