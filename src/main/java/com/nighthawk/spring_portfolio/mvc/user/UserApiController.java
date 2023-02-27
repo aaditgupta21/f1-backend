@@ -1,10 +1,15 @@
 package com.nighthawk.spring_portfolio.mvc.user;
 
+import org.json.simple.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.client.RestTemplate;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
 import org.springframework.security.crypto.bcrypt.BCrypt;
 import com.nighthawk.spring_portfolio.mvc.user.User;
@@ -271,12 +276,26 @@ public class UserApiController {
         return new ResponseEntity<>("all bets updated", HttpStatus.OK);
     }
 
-    @GetMapping("/getBets/{id}")
-    public ResponseEntity<Object> getBets(@PathVariable String idString) {
+    @GetMapping("/getBets") // fix
+    public ResponseEntity<?> getBets(@RequestBody final Map<String, Object> map) {
+        String idString = (String) map.get("user");
+
         Long id = Long.valueOf(idString);
         List<Bet> bets = betRepository.findAllById(id);
 
-        return new ResponseEntity<>(bets, HttpStatus.OK);
+        List<JSONObject> entities = new ArrayList<JSONObject>();
+        for (Bet bet : bets) {
+            JSONObject entity = new JSONObject();
+            entity.put("id", bet.getId());
+            entity.put("teamName", bet.getTeam().getName());
+            entity.put("raceName", bet.getRace().getName());
+            entity.put("raceDate", bet.getRace().getDate().toString());
+            entity.put("f1Coins", String.valueOf(bet.getFCoinBet()));
+            entity.put("betActive", String.valueOf(bet.getBetActive()));
+            entities.add(entity);
+        }
+
+        return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
     @PostMapping("/updateBet")
