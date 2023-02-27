@@ -18,7 +18,9 @@ Extends the JpaRepository interface from Spring Data JPA.
 
  public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
     // List <Comment> findAllByUser(User user);
-    List <Comment> findAllByComment(Comment comment);
+    // List <Comment> findAllByComment(Comment comment);
+
+    List <Comment> findAllByComment();
 
     static void save(String comment) {
     }

@@ -76,6 +76,12 @@ public class RaceApiController {
     //     return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
     // }
 
+    
+    @GetMapping("/getComments")
+    public ResponseEntity<List<Comment>> getComments() {
+        return new ResponseEntity<>(newCommentRepository.findAllByComment(), HttpStatus.OK);
+    }
+
     @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
         Comment newComment = new Comment(comment);
