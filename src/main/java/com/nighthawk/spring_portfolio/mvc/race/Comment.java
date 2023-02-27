@@ -20,27 +20,21 @@ public class Comment {
     private String comment;
     private String season;
 
-    @JoinColumn(name = "user_id")
-    @ManyToOne(cascade = CascadeType.MERGE)
-    private User user;
-
-    public Comment(String comment, String season, User user) {
-        this.comment = comment;
-        this.season = season;
-        this.user = user;
-    }
-
-    // @JoinColumn(name = "race_id")
+    // @JoinColumn(name = "user_id")
     // @ManyToOne(cascade = CascadeType.MERGE)
-    // private Race race;
+    // private User user;
 
-    // // public Comment(String comment, User user, Race race) {
-    // //     this.comment = comment;
-    // //     this.user = user;
-    // //     this.race = race;
-    // // }
-
-    // public Comment(String comment) {
+    // public Comment(String comment, String season, User user) {
     //     this.comment = comment;
+    //     this.season = season;
+    //     this.user = user;
     // }
+
+    @JoinColumn(name = "race_id")
+    @ManyToOne(cascade = CascadeType.MERGE)
+    private Race race;
+
+    public Comment(String comment) {
+        this.comment = comment;
+    }
 }

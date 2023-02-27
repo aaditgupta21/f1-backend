@@ -47,15 +47,15 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    @GetMapping("/getComments")
-    public ResponseEntity<Object> getComments(@RequestBody final Map<String, Object> map) {
-        String userId = (String) map.get("user");
+    // @GetMapping("/getComments")
+    // public ResponseEntity<Object> getComments(@RequestBody final Map<String, Object> map) {
+    //     String userId = (String) map.get("user");
 
-        Long id = Long.parseLong(userId);
-        User user = userRepository.findById(id).orElse(null);
+    //     Long id = Long.parseLong(userId);
+    //     User user = userRepository.findById(id).orElse(null);
 
-        return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
+    // }
 
     @PostMapping("/makeComment")
     public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {
@@ -70,18 +70,18 @@ public class RaceApiController {
             return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
         }
 
-        Comment commentObj = new Comment(comment, season, user);
+        Comment commentObj = new Comment(comment);
         commentRepository.save(commentObj);
 
         return new ResponseEntity<>("comment made teehee", HttpStatus.OK);
     }
 
-    // @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
-    // public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
-    //     Comment newComment = new Comment(comment);
-    //     CommentJpaRepository.save(comment);
-    //     return new ResponseEntity<>(comment + " listed successfully!", HttpStatus.CREATED);
-    // }
+    @PostMapping(value = "/newComment", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<Object> newTeam(@RequestParam("comment") String comment) {
+        Comment newComment = new Comment(comment);
+        CommentJpaRepository.save(comment);
+        return new ResponseEntity<>(comment + " listed successfully!", HttpStatus.CREATED);
+    }
 
     // GET schedule data
     @GetMapping("/races/{year}") // added to end of prefix as endpoint
