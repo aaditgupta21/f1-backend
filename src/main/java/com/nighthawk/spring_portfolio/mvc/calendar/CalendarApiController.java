@@ -44,5 +44,6 @@ public class CalendarApiController {
     public ResponseEntity<List<Calendar>> getCalendar() {
         return new ResponseEntity<>(calendarJpaRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
+
 }
 
