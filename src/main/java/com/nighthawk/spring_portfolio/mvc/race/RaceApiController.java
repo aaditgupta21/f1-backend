@@ -32,12 +32,6 @@ public class RaceApiController {
     @Autowired
     private RaceJpaRepository raceRepository;
 
-    @Autowired
-    private BetJpaRepository betRepository;
-
-    @Autowired
-    private UserJpaRepository userRepository;
-
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
 
