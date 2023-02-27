@@ -31,6 +31,10 @@ public class RaceApiController {
 
     @Autowired
     private RaceJpaRepository raceRepository;
+    @Autowired
+    private UserJpaRepository userRepository;
+    @Autowired
+    private CommentJpaRepository commentRepository;
 
     private JSONObject body; // last run result
     private HttpStatus status; // last run status
@@ -41,6 +45,15 @@ public class RaceApiController {
     @GetMapping("/")
     public ResponseEntity<List<Race>> getRaces() {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
+    }
+
+    @GetMapping("/getComments")
+    public ResponseEntity<Object> getComments(@RequestBody final Map<String, Object> map) {
+        String userId = (String) map.get("user");
+        Long id = Long.parseLong(userId);
+        User user = userRepository.findById(id).orElse(null);
+
+        return new ResponseEntity<>(commentRepository.findAllByUser(user), HttpStatus.OK);
     }
 
     // GET schedule data

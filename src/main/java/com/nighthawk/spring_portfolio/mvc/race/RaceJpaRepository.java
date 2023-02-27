@@ -29,3 +29,22 @@ public interface RaceJpaRepository extends JpaRepository<Race, Long> {
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
     List<Race> findByLikeTermNative(String term);
 }
+
+
+
+// public interface CalendarJpaRepository extends JpaRepository<Calendar, Long> {
+//     List<Calendar> findAllByOrderByIdAsc();
+
+// }
+
+// public interface RaceJpaRepository extends JpaRepository<Race, Long> {
+//     Race findByYear(String Year);
+
+//     List<Race> findAllByOrderByIdAsc();
+
+//     // Custom JPA query
+//     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
+//     List<Race> findByLikeTermNative(String term);
+
+//     // Team mercedes = new Team("Mercedes", "London");
+// }
