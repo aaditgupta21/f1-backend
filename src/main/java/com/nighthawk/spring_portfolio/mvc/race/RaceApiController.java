@@ -221,17 +221,22 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findBySeason(year), HttpStatus.OK);
     }
 
-    @GetMapping("/raceByDate")
-    public ResponseEntity<Object> getRacesByDate(@RequestBody final Map<String, Object> map) {
-        String dateString = (String) map.get("date");
-        Date date;
-        try {
-            date = new SimpleDateFormat("yyyy-MM-dd").parse(dateString);
-        } catch (Exception e) {
-            return new ResponseEntity<>(dateString + " error; try yyyy-MM-dd",
-                    HttpStatus.BAD_REQUEST);
+    @GetMapping("/raceDates")
+    public ResponseEntity<Object> raceDates() {
+        List<Race> races = raceRepository.findAllByOrderByIdAsc();
+        List<Race> recentRaces = races.subList(races.size() - 13, races.size() - 1);
+
+        String json = "[";
+
+        for (Race race : recentRaces) {
+            json += "{ " + "\"raceName\": " + race.getName() + ", " + "\"date\": " + race.getDate().toString() + " }";
+            if (!race.equals(recentRaces.get(recentRaces.size() - 1))) {
+                json += ", ";
+            }
         }
 
-        return new ResponseEntity<>(raceRepository.findByDate(date), HttpStatus.OK);
+        json += " ]";
+
+        return new ResponseEntity<>(json, HttpStatus.OK);
     }
 }
