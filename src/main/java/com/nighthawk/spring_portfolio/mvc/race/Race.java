@@ -44,10 +44,6 @@ public class Race {
     @NotEmpty
     private String season;
 
-    @Column(unique = true)
-    private String year;
-    private String comment;
-
     // TODO: fix this since idk how we want to handle results of a race
     // api should copy bets ig
     private String raceResultWinner;
