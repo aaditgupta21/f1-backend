@@ -115,6 +115,7 @@ public class UserApiController {
 
     }
 
+    // update role
     @PostMapping("/updateRole")
     public ResponseEntity<Object> updateRole(@RequestBody final Map<String, Object> map) {
         String email = (String) map.get("email");
@@ -129,6 +130,7 @@ public class UserApiController {
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
+    // update user
     @PostMapping("/updateUser")
     public ResponseEntity<Object> updateUser(@RequestBody final Map<String, Object> map) {
 
@@ -167,6 +169,7 @@ public class UserApiController {
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
+    // delete user
     @DeleteMapping("/delete")
     public ResponseEntity<Object> deleteUser(@RequestBody final Map<String, Object> map) {
         String name = (String) map.get("name");
@@ -180,6 +183,8 @@ public class UserApiController {
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
+    // makes a new bet (transactional to circumvent tranasction between multiple
+    // relationships)
     @Transactional
     @PostMapping("/makeBet")
     public ResponseEntity<Object> makeBet(@RequestBody final Map<String, Object> map) {
@@ -235,6 +240,7 @@ public class UserApiController {
         return new ResponseEntity<>("user, team, or race not found", HttpStatus.BAD_REQUEST);
     }
 
+    // manual processing of bets (usually handled in SpringConfig file)
     @PostMapping("/processBets")
     public ResponseEntity<Object> processBets(@RequestBody final Map<String, Object> map) {
         String dateString = (String) map.get("date");
@@ -276,6 +282,7 @@ public class UserApiController {
         return new ResponseEntity<>("all bets updated", HttpStatus.OK);
     }
 
+    // gets bet by userid
     @GetMapping("/getBets/{idString}") // fix
     public ResponseEntity<?> getBets(@PathVariable String idString) {
         Long userId = Long.valueOf(idString);
@@ -298,6 +305,7 @@ public class UserApiController {
         return new ResponseEntity<>(entities, HttpStatus.OK);
     }
 
+    // update bet by passing id and changing f1coin and team
     @PostMapping("/updateBet")
     public ResponseEntity<Object> updateBet(@RequestBody final Map<String, Object> map) {
         String betIdString = (String) map.get("betId");
@@ -336,6 +344,7 @@ public class UserApiController {
         return new ResponseEntity<>("bet could not be found/not active", HttpStatus.BAD_REQUEST);
     }
 
+    // delete bet
     @DeleteMapping("/deleteBet")
     public ResponseEntity<Object> deleteBet(@RequestBody final Map<String, Object> map) {
         String betIdString = (String) map.get("betId");

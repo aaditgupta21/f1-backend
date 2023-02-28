@@ -26,7 +26,8 @@ import com.nighthawk.spring_portfolio.mvc.user.User;
 import com.nighthawk.spring_portfolio.mvc.user.UserJpaRepository;
 
 @Configuration
-@EnableScheduling
+@EnableScheduling // this allows methods to be scheduled in time intervals or in any scheduled
+                  // time frame
 public class SpringConfig {
 
     // // testing scheduled annotation
@@ -36,6 +37,7 @@ public class SpringConfig {
     // "Fixed rate task - " + System.currentTimeMillis() / 1000);
     // }
 
+    // repositories to be used in spring config
     @Autowired
     private RaceJpaRepository raceRepository;
 
@@ -45,7 +47,9 @@ public class SpringConfig {
     @Autowired
     private UserJpaRepository userRepository;
 
-    @Scheduled(fixedRate = 1200000)
+    // checks race results and updates them for every day
+    // processes bet associated with races that day
+    @Scheduled(fixedRate = 1200000) // set to run every 20 min (print to tell user)
     public void periodic() throws Exception {
         ZoneId defaultZoneId = ZoneId.systemDefault();
         Date date = Date.from(LocalDate.now().atStartOfDay(defaultZoneId).toInstant());
@@ -63,6 +67,7 @@ public class SpringConfig {
         System.out.println("Checked for Race Results: Updated Races And Bets (test that runs periodically dw abt it)");
     }
 
+    // race results, pulls from externall api and updates the table
     public void raceResults(Date date, Race race) throws Exception {
         JSONObject data;
         String year = String.valueOf(date.getYear() + 1900);
@@ -100,9 +105,9 @@ public class SpringConfig {
         raceRepository.save(race);
     }
 
+    // processes all bets and gives user coins and sets bets as inactive
     public void processBets(Race race) {
         String raceResultWinner = race.getRaceResultWinner();
-
         List<Bet> bets = betRepository.findAllByRace(race);
 
         for (Bet bet : bets) {
