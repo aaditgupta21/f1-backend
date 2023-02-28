@@ -23,7 +23,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @TypeDef(name = "json", typeClass = JsonType.class)
 public class Calendar {
-
+    // ID, event, note, and date of event variables generated
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -35,7 +35,8 @@ public class Calendar {
 
     @DateTimeFormat(pattern = "MM-dd-yyyy")
     private Date dateOfEvent;
-
+    
+    //tester method
     public String toString() {
         return ("{ \"event\": " + this.event + ", " + "\"Note\": " + this.note + ", " + "\"date\": " + this.dateOfEvent + "}");
     }
@@ -46,7 +47,7 @@ public class Calendar {
         this.note = note;
         this.dateOfEvent = dateOfEvent;
     }
-
+    //testing code to see if it works
     public static void main(String[] args) {
         Calendar cal = new Calendar();
         Date date = new GregorianCalendar(2006, 4, 2).getTime();

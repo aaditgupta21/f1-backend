@@ -1,4 +1,9 @@
 ## F1 Backend
+
+- Formula 1 page
+- Code for implementing mutliple API's such as a signup, a calendar, drive logs and multiple different F1 related things 
+- Database to store data
+
 Runtime link: TBD https://jportfolio.nighthawkcodingsociety.com/
 
 

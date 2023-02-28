@@ -97,6 +97,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/calendar/newCalendar").permitAll()
                 .antMatchers("/api/calendar/").permitAll()
                 .antMatchers("/api/race/makeComment").permitAll()
+                .antMatchers("/api/race/getCommentsByUser/*").permitAll()
                 .antMatchers("/").permitAll()
 
                 // all other requests need to be authenticated

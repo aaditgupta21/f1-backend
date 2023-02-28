@@ -17,7 +17,14 @@ Extends the JpaRepository interface from Spring Data JPA.
  */
 
 public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
+    // Comment findByAll(String name);
+    
     List<Comment> findAllByUser(User user);
 
     List<Comment> findAllByOrderByIdAsc();
+
+    // Custom JPA query
+    @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
+    List<Comment> findByLikeTermNative(String term);
+
 }

@@ -5,6 +5,7 @@ import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -47,16 +48,59 @@ public class RaceApiController {
         return new ResponseEntity<>(raceRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    @GetMapping("/getCommentsByUser")
-    public ResponseEntity<Object> getCommentsByUser(@RequestBody final Map<String, Object> map) {
-        String userId = (String) map.get("user");
+    // @GetMapping("/getCommentsByUser")
+    // public ResponseEntity<Object> getCommentsByUser(@RequestBody final Map<String, Object> map) {
+    //     String userId = (String) map.get("user");
 
-        Long id = Long.parseLong(userId);
-        User user = userRepository.findById(id).orElse(null);
+    //     Long id = Long.parseLong(userId);
+    //     User user = userRepository.findById(id).orElse(null);
 
-        return new ResponseEntity<>(commentRepository.findAllByUser(user),
-                HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(commentRepository.findAllByUser(user),
+    //             HttpStatus.OK);
+    // }
+
+    @GetMapping("/getCommentsByUser/{idString}")
+    public ResponseEntity<?> getCommentsByUser(@PathVariable String idString) {
+
+        Long userId = Long.valueOf(idString);
+        User user = userRepository.findById(userId).orElse(null);
+        List<Comment> comments = commentRepository.findAllByUser(user);
+
+        List<JSONObject> entities = new ArrayList<JSONObject>();
+        for (Comment comment : comments) {
+            var entity = new JSONObject();
+            entity.put("comment", comment.getComment());
+            entity.put("season", comment.getSeason());
+            entity.put("user", comment.getUser().getId());
+            entities.add(entity);
+        }
+
+        return new ResponseEntity<>(entities,
+                HttpStatus.OK); 
+        }
+
+
+    // @GetMapping("/getBets/{idString}") // fix
+    // public ResponseEntity<?> getBets(@PathVariable String idString) {
+    //     Long userId = Long.valueOf(idString);
+    //     User user = userRepository.findById(userId).orElse(null);
+
+    //     List<Bet> bets = betRepository.findAllByUser(user);
+
+    //     List<JSONObject> entities = new ArrayList<JSONObject>();
+    //     for (Bet bet : bets) {
+    //         JSONObject entity = new JSONObject();
+    //         entity.put("id", bet.getId());
+    //         entity.put("teamName", bet.getTeam().getName());
+    //         entity.put("raceName", bet.getRace().getName());
+    //         entity.put("raceDate", bet.getRace().getDate().toString());
+    //         entity.put("f1Coins", String.valueOf(bet.getFCoinBet()));
+    //         entity.put("betActive", String.valueOf(bet.getBetActive()));
+    //         entities.add(entity);
+    //     }
+
+    //     return new ResponseEntity<>(entities, HttpStatus.OK);
+    // }
 
     @PostMapping("/makeComment")
     public ResponseEntity<Object> makeComment(@RequestBody final Map<String, Object> map) {

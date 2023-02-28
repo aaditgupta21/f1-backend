@@ -14,4 +14,5 @@ Extends the JpaRepository interface from Spring Data JPA.
 public interface CalendarJpaRepository extends JpaRepository<Calendar, Long> {
     List<Calendar> findAllByOrderByIdAsc();
 
+    Calendar findByEvent(String event);
 }
