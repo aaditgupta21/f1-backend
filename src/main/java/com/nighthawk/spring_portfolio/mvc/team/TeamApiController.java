@@ -117,7 +117,7 @@ public class TeamApiController {
         if (optional.isPresent()) { // Good ID
             DriveLog driverLog = optional.get(); // value from findByID
             driverLogJpaRepository.deleteById(id); // value from findByID
-            return new ResponseEntity<>(driverLog, HttpStatus.OK); // OK HTTP response: status code, headers, and body
+            return new ResponseEntity<>("Drive Log Deleted", HttpStatus.OK); // OK HTTP response: status code, headers, and body
         }
         // Bad ID
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
