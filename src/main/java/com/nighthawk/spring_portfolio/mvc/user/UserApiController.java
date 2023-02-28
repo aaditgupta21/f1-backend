@@ -345,7 +345,7 @@ public class UserApiController {
     }
 
     // delete bet
-    @DeleteMapping("/deleteBet")
+    @PostMapping("/deleteBet")
     public ResponseEntity<Object> deleteBet(@RequestBody final Map<String, Object> map) {
         String betIdString = (String) map.get("betId");
         Long betId = Long.parseLong(betIdString);
