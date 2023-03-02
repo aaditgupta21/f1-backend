@@ -129,12 +129,14 @@ public class RaceApiController {
 
     @DeleteMapping("/delete")
     public ResponseEntity<Object> deleteComment(@RequestBody final Map<String, Object> map) {
-        String name = (String) map.get("user");
-        User user = userRepository.findByName(name);
+        String userId = (String) map.get("user");
+        Long id = Long.parseLong(userId);
+
+        User user = userRepository.findById(id).orElse(null);
 
         if (user != null) {
             commentRepository.deleteAll();
-            return new ResponseEntity<>(name + " comments deleted", HttpStatus.OK);
+            return new ResponseEntity<>("user " + userId + " comments deleted", HttpStatus.OK);
         }
 
         return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);

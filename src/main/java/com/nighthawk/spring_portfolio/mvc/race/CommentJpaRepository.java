@@ -23,8 +23,6 @@ public interface CommentJpaRepository extends JpaRepository<Comment, Long> {
 
     List<Comment> findAllByOrderByIdAsc();
 
-    List<Comment> findAllByComment
-
     // Custom JPA query
     @Query(value = "SELECT * FROM Person p WHERE p.name LIKE ?1 or p.email LIKE ?1", nativeQuery = true)
     List<Comment> findByLikeTermNative(String term);
