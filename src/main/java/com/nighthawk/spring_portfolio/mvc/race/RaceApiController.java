@@ -127,7 +127,7 @@ public class RaceApiController {
         return new ResponseEntity<>(commentRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
     }
 
-    @DeleteMapping("/delete")
+    @PostMapping("/delete")
     public ResponseEntity<Object> deleteComment(@RequestBody final Map<String, Object> map) {
         String userId = (String) map.get("user");
         Long id = Long.parseLong(userId);
