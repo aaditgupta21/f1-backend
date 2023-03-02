@@ -20,6 +20,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import com.fasterxml.jackson.annotation.JsonTypeInfo.Id;
 import com.nighthawk.spring_portfolio.mvc.betting.Bet;
 import com.nighthawk.spring_portfolio.mvc.betting.BetJpaRepository;
 import com.nighthawk.spring_portfolio.mvc.team.Team;
@@ -124,6 +125,19 @@ public class RaceApiController {
     @GetMapping("/getComments")
     public ResponseEntity<List<Comment>> getComments() {
         return new ResponseEntity<>(commentRepository.findAllByOrderByIdAsc(), HttpStatus.OK);
+    }
+
+    @DeleteMapping("/delete")
+    public ResponseEntity<Object> deleteComment(@RequestBody final Map<String, Object> map) {
+        String name = (String) map.get("user");
+        User user = userRepository.findByName(name);
+
+        if (user != null) {
+            commentRepository.deleteAll();
+            return new ResponseEntity<>(name + " comments deleted", HttpStatus.OK);
+        }
+
+        return new ResponseEntity<>("user not found", HttpStatus.BAD_REQUEST);
     }
 
     // GET schedule data
